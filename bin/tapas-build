@@ -1,0 +1,14 @@
+#!/usr/bin/env node
+
+require('babel-core/register');
+
+var program = require('commander');
+
+program
+  .version(require('../package').version)
+  .option('-p, --production', 'Generate files which are under production environment.')
+  .option('-w, --watch', 'Watches all dependencies and recompile on change.')
+  .option('--config <example.config.js>', 'Specifies a different configuration file to pick up.')
+  .parse(process.argv);
+
+require('../src/entry')(program);

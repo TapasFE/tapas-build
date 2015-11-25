@@ -20,7 +20,6 @@ $ tapas-build <entry> <output>
 
 ``` 
 -h, --help
--d, --development
 -p, --production
 -w, --watch
 --config <example.config.js>

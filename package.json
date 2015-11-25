@@ -19,5 +19,11 @@
     "publish": "git push origin master --tags",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "pre-commit": []
+  "pre-commit": [],
+  "dependencies": {
+    "babel-core": "^6.2.1",
+    "commander": "^2.9.0",
+    "rimraf": "^2.4.4",
+    "webpack": "^1.12.9"
+  }
 }
