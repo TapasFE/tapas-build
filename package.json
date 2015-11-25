@@ -1,0 +1,23 @@
+{
+  "name": "tapas-build",
+  "version": "0.1.0",
+  "description": "Command line tools to handle react project",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tsingchao/tapas-build.git"
+  },
+  "mai": "tsingchao <qingchao.tan@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/tsingchao/tapas-build/issues"
+  },
+  "homepage": "https://github.com/tsingchao/tapas-build#readme",
+  "bin": {
+    "tapas-build": "bin/tapas-build"
+  },
+  "scripts": {
+    "publish": "git push origin master --tags",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "pre-commit": []
+}
