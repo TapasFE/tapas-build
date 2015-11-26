@@ -18,7 +18,7 @@ $ tapas-build <entry> <output>
 
 ### Options
 
-``` 
+```
 -h, --help
 -p, --production
 -w, --watch
@@ -37,7 +37,7 @@ To export `Function`
 
 ``` javascript
 /**
- * @param  defaultConfig {Object} 
+ * @param  defaultConfig {Object}
  * @param  environment   {String} <production | development>
  * @return customConfig  {Object}
  */

@@ -29,6 +29,7 @@
     "babel-preset-stage-0": "^6.1.18",
     "commander": "^2.9.0",
     "css-loader": "^0.23.0",
+    "extract-text-webpack-plugin": "^0.9.1",
     "file-loader": "^0.8.5",
     "is-plain-object": "^2.0.1",
     "less": "^2.5.3",

@@ -10,3 +10,5 @@ export default function(args, callback) {
   const config = getConfig(args);
 
 }
+
+module.exports = exports["default"];
