@@ -2,33 +2,14 @@ import { join } from 'path';
 import webpack from 'webpack';
 import ExtractTextPlugin from 'extract-text-webpack-plugin';
 
-let defaultConfig = {
-  getEntry: function (hot, cwd) {
-    let vendor = [];
-    if (hot) {
-      vendor.concat([
-        'webpack-dev-server/client?http://localhost:8080',
-        'webpack/hot/only-dev-server'
-      ]);
-    }
-    return {
-      main: join(cwd, 'client/main'),
-      vendor: vendor
+let getCommonConfig = {
+  getLoders: function (args) {
+    let name = args.hash ? '[name].[ext]': '[name].[hash:8].[ext]';
+    const babelQuery = {
+      presets: ['stage-0', 'es2015', 'react']
     };
-  },
-  getOutput: function (dev, cwd) {
-    let filename = dev ? '[name].js' : '[name].[chunkhash:8].js'
-    return {
-      path: join(cwd, 'build'),
-      filename: filename,
-      publicPath: '/static/'  // when `production`, it should be a cdn prefix
-    };
-  },
-  getLoders: function (hot) {
-    let jsLoader = hot ? 'react-hot!babel' : 'babel';
-    let name = hot ? '[name].[ext]': '[name].[hash:8].[ext]';
-    return [
-      { test: /\.js$/, loader: jsLoader, exclude: /node_modules/ },
+    const loaders = [
+      { test: /\.js$/, loader: 'babel', query: babelQuery, exclude: /node_modules/ },
       { test: /\.json$/, loader: 'json' },
       { test: /\.(png|jpg|gif)$/, loader: 'url?limit=2048', name: `images/${name}` },
       { test: /\.woff$/, loader: 'url?limit=100&minetype=application/font-woff', name: `fonts/${name}` },
@@ -37,12 +18,13 @@ let defaultConfig = {
       { test: /\.eot$/, loader: 'url?limit=100', name: `fonts/${name}` },
       { test: /\.svg$/, loader: 'url?limit=10000&minetype=image/svg+xml', name: `fonts/${name}` }
     ];
+    return loaders.concat(this.getCssLoaders(args))
   },
-  getCssLoaders: function(extractCss) {
+  getCssLoaders: function (args) {
     let cssLoaderLocal = 'css?modules&importLoaders=1&localIdentName=[name]__[local]___[hash:base64:5]!postcss?pack=default';
     let cssLoaderGlobal= 'css!postcss?pack=default';
     let lessLoader = 'css?importLoaders=1!less!postcss?pack=default'
-    if (extractCss) {
+    if (args.extractCss) {
       cssLoaderLocal = ExtractTextPlugin.extract('style', cssLoaderLocal);
       cssLoaderGlobal = ExtractTextPlugin.extract('style', cssLoaderGlobal);
       lessLoader = ExtractTextPlugin.extract('style', lessLoader);
@@ -51,53 +33,68 @@ let defaultConfig = {
       cssLoaderGlobal = 'style!' + cssLoaderGlobal;
       lessLoader = 'style!' + lessLoader;
     }
-    return [
-      { test: /\.css$/, loader: cssLoaderLocal, exclude: /node_modules/ },
-      { test: /\.css$/, loader: cssLoaderGlobal, include: /node_modules/ },
-      { test: /\.less$/, loader: lessLoader, include: /node_modules/ }
-    ];
+    if (args.cssModules) {
+      return [
+        { test: /\.css$/, loader: cssLoaderLocal, exclude: /node_modules/ },
+        { test: /\.css$/, loader: cssLoaderGlobal, include: /node_modules/ },
+        { test: /\.less$/, loader: lessLoader, include: /node_modules/ }
+      ];
+    } else {
+      return [
+        { test: /\.css$/, loader: cssLoaderGlobal },
+        { test: /\.less$/, loader: lessLoader }
+      ]
+    }
   },
-  getResolve: function () {
-    return {
-      extensions: ['', '.js']
-    };
-  },
-  getPluigns: function (dev) {
+  getPluigns: function (args) {
+    const vendorJsName = args.hash ? 'vendor.[chunkhash:8].js' : 'vendor.js';
+    const cssName = args.hash ? '[name].[chunkhash:8].js' : '[name].js';
     let plugins = [
-      new webpack.optimize.OccurrenceOrderPlugin()
-    ];
-    let pluginsExtend = dev ? this.getDevPlugins() : this.getPordPlugins()
-    return plugins.concat(pluginsExtend)
-  },
-  getDevPlugins: function () {
-    return [
-      new webpack.DefinePlugin({ 'process.env.NODE_ENV': '"development"' }),
-      new webpack.optimize.CommonsChunkPlugin({ name: 'vendor', filename: 'vendor.js', minChunks: Infinity }),
-      new webpack.HotModuleReplacementPlugin(),
-      new webpack.NoErrorsPlugin()
-    ];
-  },
-  getPordPlugins: function () {
-    return [
-      new webpack.DefinePlugin({ 'process.env.NODE_ENV': '"production"' }),
-      new webpack.optimize.CommonsChunkPlugin({ name: 'vendor', filename: 'vendor.[chunkhash:8].js', minChunks: Infinity }),
+      new webpack.optimize.OccurrenceOrderPlugin(),
+      new webpack.optimize.CommonsChunkPlugin({ name: 'vendor', filename: vendorJsName, minChunks: Infinity }),
       new webpack.optimize.UglifyJsPlugin({ compress: { warnings: false }, sourceMap: false }),
-      new ExtractTextPlugin('[name].[chunkhash:8].css', { allChunks: true })
-    ];
+    ]
+    if (args.extractCss) {
+      return plugins.concat([
+        new ExtractTextPlugin(cssName, { allChunks: true })
+      ])
+    }
   }
 }
 
-export default function getDefaultConfig(args) {
-  const dev = args.environment == 'production' ? false : true
+/** args {Object}
+  * args = {
+  *   ...
+  *   cwd {String} process.cwd
+  *   devtool {String} choost webpack devtool, `false` recommended
+  *   publicPath {String} could be a cdn prefix, default `/static/`
+  *   hash {Boolean} determine to hash js/css or not, `true` recommended
+  *   extractCss determine to extract css file or not, `true` recommended
+  *   cssModules determine to make css(exclude /node_modules/) modular or not, `true` recommended
+  *   ...
+  * }
+**/
+
+export default function getDefaultConfig (args) {
+  let pkg = require(join(args.cwd, 'package.json'));
+
+  const jsName = args.hash ? '[name].[chunkhash:8].js' : '[name].js';
+
   return {
-    devtool: dev ? 'eval' : false,
-    entry: defaultConfig.getEntry(dev, args.cwd),
-    output: defaultConfig.getOutput(dev, args.cwd),
-    module: {
-      loaders: defaultConfig.getLoders(dev).concat(defaultConfig.getCssLoaders(!dev))
+    devtool: args.devtool || false,
+    entry: pkg.entry,
+    output: {
+      path: join(args.cwd, 'build'),
+      filename: jsName,
+      publicPath: args.publicPath || '/static/'
     },
-    resolve: defaultConfig.getResolve(),
-    plugins: defaultConfig.getPluigns(dev),
+    module: {
+      loaders: getCommonConfig.getLoders(args)
+    },
+    resolve: {
+      extensions: ['', '.js']
+    },
+    plugins: getCommonConfig.getPluigns(args),
     postcss: function () {
       return {
         default: [ require('autoprefixer')({ browsers: ['last 2 versions'] }) ]
