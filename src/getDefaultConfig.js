@@ -4,7 +4,7 @@ import ExtractTextPlugin from 'extract-text-webpack-plugin';
 
 let getCommonConfig = {
   getLoders: function (args) {
-    let name = args.hash ? '[name].[ext]': '[name].[hash:8].[ext]';
+    let name = args.hash ? '[name].[hash:8].[ext]' : '[name].[ext]';
     const babelQuery = {
       presets: ['stage-0', 'es2015', 'react']
     };
@@ -22,7 +22,7 @@ let getCommonConfig = {
   },
   getCssLoaders: function (args) {
     let cssLoaderLocal = 'css?modules&importLoaders=1&localIdentName=[name]__[local]___[hash:base64:5]!postcss?pack=default';
-    let cssLoaderGlobal= 'css!postcss?pack=default';
+    let cssLoaderGlobal = 'css!postcss?pack=default';
     let lessLoader = 'css?importLoaders=1!less!postcss?pack=default'
     if (args.extractCss) {
       cssLoaderLocal = ExtractTextPlugin.extract('style', cssLoaderLocal);
@@ -50,9 +50,10 @@ let getCommonConfig = {
     const vendorJsName = args.hash ? 'vendor.[chunkhash:8].js' : 'vendor.js';
     const cssName = args.hash ? '[name].[chunkhash:8].js' : '[name].js';
     let plugins = [
+      new webpack.DefinePlugin({ 'process.env.NODE_ENV': JSON.stringify(args.env) }),
       new webpack.optimize.OccurrenceOrderPlugin(),
       new webpack.optimize.CommonsChunkPlugin({ name: 'vendor', filename: vendorJsName, minChunks: Infinity }),
-      new webpack.optimize.UglifyJsPlugin({ compress: { warnings: false }, sourceMap: false }),
+      new webpack.optimize.UglifyJsPlugin({ compress: { warnings: false }, sourceMap: false })
     ]
     if (args.extractCss) {
       return plugins.concat([
@@ -68,9 +69,9 @@ let getCommonConfig = {
   *   cwd {String} process.cwd
   *   devtool {String} choost webpack devtool, `false` recommended
   *   publicPath {String} could be a cdn prefix, default `/static/`
-  *   hash {Boolean} determine to hash js/css or not, `true` recommended
-  *   extractCss determine to extract css file or not, `true` recommended
-  *   cssModules determine to make css(exclude /node_modules/) modular or not, `true` recommended
+  *   hash {Boolean} determine to hash js/css or not, default `true`
+  *   extractCss {Boolean} determine to extract css file or not, default `true`
+  *   cssModules {Boolean} determine to make css(exclude /node_modules/) modular or not, default `true`
   *   ...
   * }
 **/
