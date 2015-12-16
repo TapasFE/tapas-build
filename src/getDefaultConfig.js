@@ -12,11 +12,11 @@ let getCommonConfig = {
       { test: /\.js$/, loader: 'babel', query: babelQuery, exclude: /node_modules/ },
       { test: /\.json$/, loader: 'json' },
       { test: /\.(png|jpg|gif)$/, loader: 'url', query: { limit: 2048, name: `images/${name}` } },
-      { test: /\.woff$/, loader: 'url', query: { limit: 100, minetype: 'application/font-woff', name: `fonts/${name}` } },
-      { test: /\.woff2$/, loader: 'url', query: { limit: 100, minetype: 'application/font-woff2', name: `fonts/${name}` } },
-      { test: /\.ttf$/, loader: 'url', query: { limit: 100, minetype: 'application/octet-stream', name: `fonts/${name}` } },
+      { test: /\.woff$/, loader: 'url', query: { limit: 100, mimetype: 'application/font-woff', name: `fonts/${name}` } },
+      { test: /\.woff2$/, loader: 'url', query: { limit: 100, mimetype: 'application/font-woff2', name: `fonts/${name}` } },
+      { test: /\.ttf$/, loader: 'url', query: { limit: 100, mimetype: 'application/octet-stream', name: `fonts/${name}` } },
       { test: /\.eot$/, loader: 'url', query: { limit: 100, name: `fonts/${name}` } },
-      { test: /\.svg$/, loader: 'url', query: { limit: 10000, minetype: 'image/svg+xml', name: `fonts/${name}` } }
+      { test: /\.svg$/, loader: 'url', query: { limit: 10000, mimetype: 'image/svg+xml', name: `fonts/${name}` } }
     ];
     return loaders.concat(this.getCssLoaders(args))
   },
