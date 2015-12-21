@@ -23,7 +23,9 @@
   "dependencies": {
     "autoprefixer-loader": "^3.1.0",
     "babel-core": "^6.2.1",
+    "babel-core-resolve-enhance": "^0.1.2",
     "babel-loader": "^6.2.0",
+    "babel-plugin-transform-class-properties": "^6.3.13",
     "babel-preset-es2015": "^6.1.18",
     "babel-preset-react": "^6.1.18",
     "babel-preset-stage-0": "^6.1.18",
@@ -34,6 +36,7 @@
     "is-plain-object": "^2.0.1",
     "less": "^2.5.3",
     "less-loader": "^2.2.1",
+    "postcss-loader": "^0.8.0",
     "rimraf": "^2.4.4",
     "url-loader": "^0.5.7",
     "webpack": "^1.12.9"
