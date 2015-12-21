@@ -14,13 +14,17 @@ export default function(args, callback) {
   * publicPath {String} could be a cdn prefix, default `/static/`
 **/
 
-  args.hash = args.hash ? args.hash : true;
-  args.extractCss = args.extractCss ? args.extractCss : true;
-  args.cssModules = args.cssModules ? args.cssModules : true;
-  args.publicPath = args.publicPath ? args.publicPath : '/static/';
+  args.hash = args.hash || true;
+  args.extractCss = args.extractCss || true;
+  args.cssModules = args.cssModules || true;
+  args.publicPath = args.publicPath || '/static/';
+  args.entry = args.args[0];
+  args.output = args.args[1];
 
-  const config = getConfig(args);
-
+  webpack(config, (err, stats) => {
+    console.log(err);
+    console.log(stats);
+  });
 }
 
 module.exports = exports["default"];
