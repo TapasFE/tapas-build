@@ -21,6 +21,7 @@ export default function(args, callback) {
   args.entry = args.args[0];
   args.output = args.args[1];
 
+  const config = getConfig(args);
   webpack(config, (err, stats) => {
     console.log(err);
     console.log(stats);
