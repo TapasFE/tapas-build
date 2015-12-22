@@ -1,6 +1,7 @@
 import {join} from 'path';
 import webpack from 'webpack';
 import ExtractTextPlugin from 'extract-text-webpack-plugin';
+import HtmlWebpackPlugin from 'html-webpack-plugin';
 
 //must set the below dir to let babel find presets from tapas-build not process.cwd
 try {
@@ -85,7 +86,7 @@ let getCommonConfig = {
   getCssLoaders: function(args) {
     let cssLoaderLocal = 'css?modules&importLoaders=1&localIdentName=[name]__[local]___[hash:base64:5]!postcss?pack=default';
     let cssLoaderGlobal = 'css!postcss?pack=default';
-    let lessLoader = 'css!less!postcss?pack=default';
+    let lessLoader = 'css!less';
     if (args.extractCss) {
       cssLoaderLocal = ExtractTextPlugin.extract('style', cssLoaderLocal);
       cssLoaderGlobal = ExtractTextPlugin.extract('style', cssLoaderGlobal);
@@ -127,12 +128,13 @@ let getCommonConfig = {
       ? 'vendor.[chunkhash:8].js'
       : 'vendor.js';
     const cssName = args.hash
-      ? '[name].[chunkhash:8].js'
-      : '[name].js';
+      ? '[name].[chunkhash:8].css'
+      : '[name].css';
     let plugins = [
       new webpack.DefinePlugin({'process.env.NODE_ENV': args.env}),
       new webpack.optimize.OccurrenceOrderPlugin(),
-      new webpack.optimize.CommonsChunkPlugin({name: 'vendor', filename: vendorJsName, minChunks: Infinity})
+      new webpack.optimize.CommonsChunkPlugin({name: 'vendor', filename: vendorJsName, minChunks: Infinity}),
+      new HtmlWebpackPlugin({ template: args.index, inject: 'body' })
     ];
     if (args.production)
       plugins = [

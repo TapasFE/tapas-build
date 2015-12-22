@@ -1,4 +1,5 @@
 import { join } from 'path';
+import { access, F_OK, R_OK } from 'fs';
 import rimraf from 'rimraf';
 import webpack from 'webpack';
 import getConfig from './getConfig';
@@ -20,6 +21,14 @@ export default function(args, callback) {
   args.publicPath = args.publicPath || '/static/';
   args.entry = args.args[0];
   args.output = args.args[1];
+
+  access(join(args.cwd, args.index || 'index.html'), F_OK | R_OK, (err) => {
+    if (err) {
+      throw new Error('You don\'t have a index.html to inject css and js!');
+    } else {
+      args.index = join(args.cwd, args.index || 'index.html')
+    }
+  });
 
   const config = getConfig(args);
   webpack(config, (err, stats) => {
