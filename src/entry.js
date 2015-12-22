@@ -3,6 +3,7 @@ import { access, F_OK, R_OK } from 'fs';
 import rimraf from 'rimraf';
 import webpack from 'webpack';
 import getConfig from './getConfig';
+import devServer from './devServer';
 
 export default function(args, callback) {
   args.cwd = args.cwd || process.cwd();
@@ -15,8 +16,8 @@ export default function(args, callback) {
   * publicPath {String} could be a cdn prefix, default `/static/`
 **/
 
-  args.hash = args.hash || true;
-  args.extractCss = args.extractCss || true;
+  args.hash = args.cwd === 'production';
+  args.extractCss = args.cwd === 'production';
   args.cssModules = args.cssModules || true;
   args.publicPath = args.publicPath || '/static/';
   args.entry = args.args[0];
@@ -31,10 +32,14 @@ export default function(args, callback) {
   });
 
   const config = getConfig(args);
-  webpack(config, (err, stats) => {
-    console.log(err);
-    console.log(stats);
-  });
+  if (args.production) {
+    webpack(config, (err, stats) => {
+      console.log(err);
+      console.log(stats);
+    });
+  } else {
+    devServer(config)
+  }
 }
 
 module.exports = exports["default"];

@@ -2,27 +2,31 @@ import {join} from 'path';
 import webpack from 'webpack';
 import ExtractTextPlugin from 'extract-text-webpack-plugin';
 import HtmlWebpackPlugin from 'html-webpack-plugin';
+import babelrc from './getBabelrc';
 
-//must set the below dir to let babel find presets from tapas-build not process.cwd
-try {
-  require('babel-core-resolve-enhance')({dirname: __dirname});
-} catch (e) {
-  console.error(`[Error] ${e.message}`);
-}
+console.log(babelrc)
 
 let getCommonConfig = {
+  getEntry: function (args) {
+    const main = join(args.cwd, args.entry) || pkg.entry
+    if (args.production) {
+      return main
+    } else {
+      return {
+        main: main,
+        vendor: [
+          'webpack-hot-middleware/client'
+        ]
+      }
+    }
+  },
   getLoaders: function(args) {
     let name = args.hash
       ? '[name].[hash:8].[ext]'
       : '[name].[ext]';
     const babelQuery = {
-      cacheDirectory: true,
-      presets: [
-        require.resolve('babel-preset-stage-0'),
-        require.resolve('babel-preset-es2015'),
-        require.resolve('babel-preset-react')
-      ],
-      plugins: [require.resolve('babel-plugin-transform-class-properties')]
+      presets: babelrc.presets,
+      plugins: args.env === 'production' ? args.plugins : args.devPlugins
     };
     const loaders = [
       {
@@ -124,17 +128,15 @@ let getCommonConfig = {
     }
   },
   getPluigns: function(args) {
-    const vendorJsName = args.hash
-      ? 'vendor.[chunkhash:8].js'
-      : 'vendor.js';
     const cssName = args.hash
-      ? '[name].[chunkhash:8].css'
+      ? '[name].[hash:8].css'
       : '[name].css';
     let plugins = [
-      new webpack.DefinePlugin({'process.env.NODE_ENV': args.env}),
+      new webpack.DefinePlugin({'process.env.NODE_ENV': JSON.stringify(args.env)}),
       new webpack.optimize.OccurrenceOrderPlugin(),
-      new webpack.optimize.CommonsChunkPlugin({name: 'vendor', filename: vendorJsName, minChunks: Infinity}),
-      new HtmlWebpackPlugin({ template: args.index, inject: 'body' })
+      new webpack.optimize.CommonsChunkPlugin({name: 'vendor', filename: 'vendor.js', minChunks: Infinity}),
+      new HtmlWebpackPlugin({ template: args.index, inject: 'body' }),
+      new webpack.HotModuleReplacementPlugin()
     ];
     if (args.production)
       plugins = [
@@ -148,6 +150,8 @@ let getCommonConfig = {
       ];
     if (args.extractCss) {
       return plugins.concat([new ExtractTextPlugin(cssName, {allChunks: true})])
+    } else {
+      return plugins
     }
   }
 }
@@ -176,11 +180,11 @@ export default function getDefaultConfig(args) {
     devtool: args.devtool || false,
     debug: true,
     bail: true,
-    entry: join(args.cwd, args.entry) || pkg.entry,
+    entry: getCommonConfig.getEntry(args),
     output: {
       path: join(args.cwd, args.output) || join(args.cwd, 'build'),
       filename: jsName,
-      publicPath: args.publicPath || '/static/'
+      publicPath: args.publicPath
     },
     module: {
       loaders: getCommonConfig.getLoaders(args)
