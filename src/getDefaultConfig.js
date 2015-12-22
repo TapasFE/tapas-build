@@ -17,9 +17,11 @@ let getCommonConfig = {
     const babelQuery = {
       cacheDirectory: true,
       presets: [
-        'stage-0', 'es2015', 'react'
+        require.resolve('babel-preset-stage-0'),
+        require.resolve('babel-preset-es2015'),
+        require.resolve('babel-preset-react')
       ],
-      plugins: ["transform-class-properties"]
+      plugins: [require.resolve('babel-plugin-transform-class-properties')]
     };
     const loaders = [
       {
