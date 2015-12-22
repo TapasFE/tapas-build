@@ -26,7 +26,7 @@ let getCommonConfig = {
         test: /\.jsx?$/,
         loader: 'babel',
         query: babelQuery,
-        //exclude: /node_modules/
+        exclude: /node_modules/
       }, {
         test: /\.json$/,
         loader: 'json'
