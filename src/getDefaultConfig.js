@@ -83,7 +83,7 @@ let getCommonConfig = {
   getCssLoaders: function(args) {
     let cssLoaderLocal = 'css?modules&importLoaders=1&localIdentName=[name]__[local]___[hash:base64:5]!postcss?pack=default';
     let cssLoaderGlobal = 'css!postcss?pack=default';
-    let lessLoader = 'css?importLoaders=1!less!postcss?pack=default'
+    let lessLoader = 'css!less!postcss?pack=default';
     if (args.extractCss) {
       cssLoaderLocal = ExtractTextPlugin.extract('style', cssLoaderLocal);
       cssLoaderGlobal = ExtractTextPlugin.extract('style', cssLoaderGlobal);
@@ -105,8 +105,7 @@ let getCommonConfig = {
           include: /node_modules/
         }, {
           test: /\.less$/,
-          loader: lessLoader,
-          include: /node_modules/
+          loader: lessLoader
         }
       ];
     } else {
@@ -131,8 +130,8 @@ let getCommonConfig = {
     let plugins = [
       new webpack.DefinePlugin({'process.env.NODE_ENV': args.env}),
       new webpack.optimize.OccurrenceOrderPlugin(),
-      new webpack.optimize.CommonsChunkPlugin({ name: 'vendor', filename: vendorJsName, minChunks: Infinity }),
-    ]
+      new webpack.optimize.CommonsChunkPlugin({name: 'vendor', filename: vendorJsName, minChunks: Infinity})
+    ];
     if (args.production)
       plugins = [
         ...plugins,
@@ -194,7 +193,9 @@ export default function getDefaultConfig(args) {
     postcss: function() {
       return {
           default:
-          [require('autoprefixer')({browsers: ['last 2 versions']})]
+          [
+            require('autoprefixer')({browsers: ['last 2 versions']})
+          ]
         }
       }
     }
