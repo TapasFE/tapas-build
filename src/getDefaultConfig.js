@@ -4,20 +4,16 @@ import ExtractTextPlugin from 'extract-text-webpack-plugin';
 import HtmlWebpackPlugin from 'html-webpack-plugin';
 import babelrc from './getBabelrc';
 
-console.log(babelrc)
-
 let getCommonConfig = {
   getEntry: function (args) {
     const main = join(args.cwd, args.entry) || pkg.entry
     if (args.production) {
       return main
     } else {
-      return {
-        main: main,
-        vendor: [
-          'webpack-hot-middleware/client'
-        ]
-      }
+      return [
+        main,
+        'webpack-hot-middleware/client'
+      ]
     }
   },
   getLoaders: function(args) {
@@ -177,7 +173,7 @@ export default function getDefaultConfig(args) {
     : '[name].js';
 
   return {
-    devtool: args.devtool || false,
+    devtool: args.devtool || 'eval',
     debug: true,
     bail: true,
     entry: getCommonConfig.getEntry(args),
