@@ -16,29 +16,41 @@ export default function(args, callback) {
   * publicPath {String} could be a cdn prefix, default `/static/`
 **/
 
-  args.hash = args.cwd === 'production';
-  args.extractCss = args.cwd === 'production';
+  args.hash = args.env === 'production';
+  args.extractCss = args.env === 'production';
   args.cssModules = args.cssModules || true;
   args.publicPath = args.publicPath || '/static/';
   args.entry = args.args[0];
   args.output = args.args[1];
 
-  access(join(args.cwd, args.index || 'index.html'), F_OK | R_OK, (err) => {
+  const indexFile = join(args.cwd, args.index || 'index.html');
+
+  access(indexFile, F_OK | R_OK, (err) => {
     if (err) {
       throw new Error('You don\'t have a index.html to inject css and js!');
     } else {
-      args.index = join(args.cwd, args.index || 'index.html')
+      args.index = indexFile;
     }
   });
 
+  const outputPath = join(args.cwd, args.output);
   const config = getConfig(args);
+
   if (args.production) {
+    access(outputPath, F_OK, (err) => {
+      if (!err) {
+        rimraf(outputPath, () => {
+          console.log('The output path is clean');
+        });
+      }
+    });
+
     webpack(config, (err, stats) => {
       console.log(err);
       console.log(stats);
     });
   } else {
-    devServer(config)
+    devServer(config);
   }
 }
 

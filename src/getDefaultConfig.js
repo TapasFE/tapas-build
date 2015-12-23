@@ -124,17 +124,20 @@ let getCommonConfig = {
     }
   },
   getPluigns: function(args) {
+    const vendorJsName = args.hash
+      ? '[name].[chunkhash:8].js'
+      : '[name].js';
     const cssName = args.hash
-      ? '[name].[hash:8].css'
+      ? '[name].[chunkhash:8].css'
       : '[name].css';
     let plugins = [
       new webpack.DefinePlugin({'process.env.NODE_ENV': JSON.stringify(args.env)}),
       new webpack.optimize.OccurrenceOrderPlugin(),
-      new webpack.optimize.CommonsChunkPlugin({name: 'vendor', filename: 'vendor.js', minChunks: Infinity}),
+      new webpack.optimize.CommonsChunkPlugin({name: 'vendor', filename: vendorJsName, minChunks: Infinity}),
       new HtmlWebpackPlugin({ template: args.index, inject: 'body' }),
-      new webpack.HotModuleReplacementPlugin()
+      new webpack.NoErrorsPlugin()
     ];
-    if (args.production)
+    if (args.production) {
       plugins = [
         ...plugins,
         new webpack.optimize.UglifyJsPlugin({
@@ -144,11 +147,19 @@ let getCommonConfig = {
           sourceMap: false
         })
       ];
-    if (args.extractCss) {
-      return plugins.concat([new ExtractTextPlugin(cssName, {allChunks: true})])
     } else {
-      return plugins
+      plugins = [
+        ...plugins,
+        new webpack.HotModuleReplacementPlugin(),
+      ];
     }
+    if (args.extractCss) {
+      plugins = [
+        ...plugins,
+        new ExtractTextPlugin(cssName, {allChunks: true})
+      ];
+    }
+    return plugins
   }
 }
 
