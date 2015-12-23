@@ -5,7 +5,6 @@ export default {
     require.resolve("babel-preset-stage-0")
   ],
   "devPlugins": [
-    [require.resolve("babel-plugin-transform-class-properties")],
     [require.resolve("babel-plugin-antd")],
     [require.resolve("babel-plugin-react-transform"), {
       "transforms": [{
@@ -19,7 +18,6 @@ export default {
     }]
   ],
   plugins: [
-    [require.resolve("babel-plugin-transform-class-properties")],
     [require.resolve("babel-plugin-antd")]
   ]
 }
