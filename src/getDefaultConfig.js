@@ -22,7 +22,7 @@ let getCommonConfig = {
       : '[name].[ext]';
     const babelQuery = {
       presets: babelrc.presets,
-      plugins: args.env === 'production' ? args.plugins : args.devPlugins
+      plugins: args.env === 'production' ? babelrc.plugins : babelrc.devPlugins
     };
     const loaders = [
       {

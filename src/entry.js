@@ -36,6 +36,8 @@ export default function(args, callback) {
   const outputPath = join(args.cwd, args.output);
   const config = getConfig(args);
 
+  console.log(config.module.loaders[0].plugins)
+
   if (args.production) {
     access(outputPath, F_OK, (err) => {
       if (!err) {

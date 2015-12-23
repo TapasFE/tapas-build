@@ -9,7 +9,7 @@ export default (config) => {
 
   var compiler = webpack(config)
   var options = {
-    noInfo: false,
+    noInfo: true,
     quiet: false,
     publicPath: config.output.publicPath,
     stats: { colors: true }
