@@ -10,10 +10,12 @@ let getCommonConfig = {
     if (args.production) {
       return main
     } else {
-      return [
-        main,
-        'webpack-hot-middleware/client'
-      ]
+      return {
+        main: main,
+        vendor: [
+          'webpack-hot-middleware/client'
+        ]
+      }
     }
   },
   getLoaders: function(args) {
