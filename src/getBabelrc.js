@@ -9,11 +9,11 @@ export default {
     [require.resolve("babel-plugin-react-transform"), {
       "transforms": [{
         "transform": require.resolve("react-transform-hmr"),
-        "imports": ["react"],
+        "imports": [require.resolve("react")],
         "locals": ["module"]
       }, {
         "transform": require.resolve("react-transform-catch-errors"),
-        "imports": ["react", require.resolve("redbox-react")]
+        "imports": [require.resolve("react"), require.resolve("redbox-react")]
       }]
     }]
   ],
