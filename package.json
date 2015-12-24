@@ -4,7 +4,7 @@
   "description": "A command line tools for building React project",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/tsingchao/tapas-build.git"
+    "url": "git+https://github.com/TapasFE/tapas-build.git"
   },
   "mai": "tsingchao <qingchao.tan@gmail.com>",
   "license": "MIT",
