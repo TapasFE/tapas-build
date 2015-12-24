@@ -10,10 +10,10 @@ let getCommonConfig = {
     if (args.production) {
       return main
     } else {
-      return [
-        main,
-        'webpack-hot-middleware/client'
-      ]
+      return {
+        main:main,
+        vendor: ['webpack-hot-middleware/client']
+      }
     }
   },
   getLoaders: function(args) {
@@ -184,9 +184,8 @@ export default function getDefaultConfig(args) {
     : '[name].js';
 
   return {
-    devtool: args.devtool || 'eval',
+    devtool: args.devtool || 'cheap-module-eval-source-map',
     debug: true,
-    bail: true,
     entry: getCommonConfig.getEntry(args),
     output: {
       path: join(args.cwd, args.output) || join(args.cwd, 'build'),

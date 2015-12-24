@@ -1,5 +1,7 @@
 #!/usr/bin/env node
-
+require('babel-core-resolve-enhance')({
+  dirname: __dirname
+});
 require('babel-core/register');
 
 var program = require('commander');

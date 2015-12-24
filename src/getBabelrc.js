@@ -1,23 +1,23 @@
 export default {
   "presets": [
-    require.resolve("babel-preset-react"),
-    require.resolve("babel-preset-es2015"),
-    require.resolve("babel-preset-stage-0")
+    "babel-preset-react",
+    "babel-preset-es2015",
+    "babel-preset-stage-0"
   ],
   "devPlugins": [
-    [require.resolve("babel-plugin-antd")],
-    [require.resolve("babel-plugin-react-transform"), {
+    ["babel-plugin-antd"],
+    ["babel-plugin-react-transform", {
       "transforms": [{
-        "transform": require.resolve("react-transform-hmr"),
-        "imports": [require.resolve("react")],
+        "transform": "react-transform-hmr",
+        "imports": ["react"],
         "locals": ["module"]
       }, {
-        "transform": require.resolve("react-transform-catch-errors"),
-        "imports": [require.resolve("react"), require.resolve("redbox-react")]
+        "transform": "react-transform-catch-errors",
+        "imports": ["react", "redbox-react"]
       }]
     }]
   ],
   plugins: [
-    [require.resolve("babel-plugin-antd")]
+    ["babel-plugin-antd"]
   ]
 }
