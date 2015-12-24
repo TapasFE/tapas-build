@@ -7,7 +7,7 @@ import isPlainObject from 'is-plain-object';
  * @param args          {Object}
  */
 export default function mergeCustomConfig(defaultConfig, args) {
-  
+
   if (!args.config) {
     return defaultConfig;
   }
