@@ -19,7 +19,7 @@ export default function(args, callback) {
   args.hash = args.env === 'production';
   args.extractCss = args.env === 'production';
   args.cssModules = args.cssModules || true;
-  args.publicPath = args.publicPath || '/static/';
+  args.publicPath = args.publicPath || './';
   args.entry = args.args[0];
   args.output = args.args[1];
 
@@ -45,9 +45,8 @@ export default function(args, callback) {
       }
     });
 
-    webpack(config, (err, stats) => {
-      console.log(err);
-      console.log(stats);
+    const compiler = webpack(config, (err, stats) => {
+      console.log(compiler);
     });
   } else {
     devServer(config);

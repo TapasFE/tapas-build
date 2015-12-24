@@ -184,13 +184,13 @@ export default function getDefaultConfig(args) {
     : '[name].js';
 
   return {
-    devtool: args.devtool || 'cheap-module-eval-source-map',
-    debug: true,
+    devtool: args.production ? false : 'cheap-module-eval-source-map',
+    debug: Boolean(args.production),
     entry: getCommonConfig.getEntry(args),
     output: {
       path: join(args.cwd, args.output) || join(args.cwd, 'build'),
       filename: jsName,
-      publicPath: args.publicPath
+      publicPath: args.production ? args.publicPath : '/static/'
     },
     module: {
       loaders: getCommonConfig.getLoaders(args)
