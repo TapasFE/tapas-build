@@ -4,8 +4,6 @@
 
 ![NPM](https://img.shields.io/npm/v/tapas-build.svg)
 
-------
-
 ### Install
 
 ``` shell
