@@ -2,6 +2,8 @@
 
 ## A command line tools for building React project.
 
+![NPM](https://img.shields.io/npm/v/tapas-build.svg)
+
 ------
 
 ### Install
