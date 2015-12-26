@@ -1,12 +1,12 @@
 export default {
   "presets": [
-    "babel-preset-react",
-    "babel-preset-es2015",
-    "babel-preset-stage-0"
+    "react",
+    "es2015",
+    "stage-0"
   ],
   "devPlugins": [
-    ["babel-plugin-antd"],
-    ["babel-plugin-react-transform", {
+    ["antd"],
+    ["react-transform", {
       "transforms": [{
         "transform": "react-transform-hmr",
         "imports": ["react"],
@@ -18,6 +18,6 @@ export default {
     }]
   ],
   plugins: [
-    ["babel-plugin-antd"]
+    ["antd"]
   ]
 }

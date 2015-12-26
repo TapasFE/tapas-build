@@ -1,42 +1,93 @@
-import { join } from 'path';
-import { access, F_OK, R_OK } from 'fs';
+import { join, resolve } from 'path';
+import { readFileSync, access, F_OK, R_OK } from 'fs';
 import rimraf from 'rimraf';
 import webpack from 'webpack';
+
+import isObject from 'isobject';
+
 import getConfig from './getConfig';
 import devServer from './devServer';
+import rawHTML from './gen/rawHTML';
 
-export default function(args, callback) {
+export default (args, callback) => {
   args.cwd = args.cwd || process.cwd();
-  args.env = args.production ? 'production' : 'development';
-
-/**
-  * hash {Boolean} determine to hash js/css or not, default `true`
-  * extractCss {Boolean} determine to extract css file or not, default `true`
-  * cssModules {Boolean} determine to make css(exclude /node_modules/) modular or not, default `true`
-  * publicPath {String} could be a cdn prefix, default `/static/`
-**/
-
-  args.hash = args.env === 'production';
-  args.extractCss = args.env === 'production';
-  args.cssModules = args.cssModules || true;
   args.publicPath = args.publicPath || './';
-  args.entry = args.args[0];
-  args.output = args.args[1];
+  args.cssModules = args.cssModules || true;
+  args.isComponent = false;
 
-  const indexFile = join(args.cwd, args.index || 'index.html');
+  const pkg = require(join(args.cwd, './package.json'));
+  const tapas = pkg.tapas;
+  const { entry, vendor, output, index } = tapas;
+  const inputArgs = args.args;
 
-  access(indexFile, F_OK | R_OK, (err) => {
+  // 先赋值到`args`上，再验证参数是否正确
+  switch(inputArgs.length) {
+    case 2:
+      // 按照package.json 里`tapas`(忽略其中的entry和vendor选项)的配置项加载
+      args.entry = inputArgs[0];
+      args.output = inputArgs[1];
+      args.vendor = vendor || [];
+      args.index = index;
+      break;
+    case 1:
+      // 报错;
+      throw new Error('You should use `tapas-build <entry> <output>`')
+      break;
+    case 0:
+      // 按照package.json 里`tapas`的配置项加载
+      args.entry = entry;
+      args.output = output;
+      args.vendor = vendor || [];
+      args.index = index;
+      break;
+    default:
+     // 报错;
+      throw new Error('You should config `tapas` in package.json')
+  }
+
+  // 验证<entry>{String} <output>{String} <vendor>{Array} <index>{String}四个参数的是否正确
+
+  // 将 args.index 转为字符串
+  // 需根据<index>确定是否为组件或者网站
+  // 若为组件，直接生成新的ReactDOM.render和index.html
+  if (args.index) {
+    args.isComponent = true;
+    args.index = rawHTML.replace(/pkgName/, pkg.name)
+  } else {
+    const indexPath = join(args.cwd, args.index)
+    access(indexPath, F_OK | R_OK, (err) => {
+      if (err) {
+        throw new Error(`The index file in ${indexPath} don\'t existed`);
+      }
+      args.index = readFileSync(indexPath, 'utf8');
+    })
+  }
+
+  // 统一转化成绝对路径
+  args.entry = join(args.cwd, args.entry)
+  args.output = join(args.cwd, args.output)
+
+  // <entry> file 是否存在，且是否存在 export
+  access(args.entry, F_OK | R_OK, (err) => {
     if (err) {
-      throw new Error('You don\'t have a index.html to inject css and js!');
-    } else {
-      args.index = indexFile;
+      throw new Error(`The entry file in ${entryPath} don\'t existed`);
     }
-  });
+  })
 
-  const outputPath = join(args.cwd, args.output);
+  // `vendor` 是否为数组
+  if (!Array.isArray(vendor)) {
+    throw new Error('You should config `vendor` as a array');
+  }
+
   const config = getConfig(args);
 
+  debugger
+
+  console.log(config.module.loaders[0].query)
+
   if (args.production) {
+    // <output> 是否存在，如果存在则 `rm -rf`
+    const outputPath = args.output;
     access(outputPath, F_OK, (err) => {
       if (!err) {
         rimraf(outputPath, () => {
