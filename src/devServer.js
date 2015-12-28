@@ -22,12 +22,12 @@ export default (config) => {
     res.redirect('/static/')
   })
 
-  app.listen(8080, 'localhost', function (err, result) {
+  app.listen(55555, 'localhost', function (err, result) {
     if (err) {
       console.log(err)
       return
     }
 
-    console.log('Listening at http://localhost: 8080')
+    console.log('Listening at http://localhost: 55555')
   })
 }

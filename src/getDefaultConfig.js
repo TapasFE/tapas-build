@@ -2,18 +2,29 @@ import {join} from 'path';
 import webpack from 'webpack';
 import ExtractTextPlugin from 'extract-text-webpack-plugin';
 import HtmlWebpackPlugin from 'html-webpack-plugin';
+import './monkeyPatchHtmlWebpackPlugin';
 import babelrc from './getBabelrc';
 
+let externals = new Set();
+let testExternal = (context, request, callback) => {
+  if (request === 'react'){
+    externals.add('http://cdn.staticfile.org/react/0.14.3/react.min.js');
+    return callback(null, 'React', 'var');
+  }
+  if (request ==='react-dom') {
+    externals.add('http://cdn.staticfile.org/react/0.14.3/react-dom.js');
+    return callback(null, 'ReactDOM', 'var');
+  }
+  callback();
+};
+
 let getCommonConfig = {
-  getEntry: function (args) {
+  getEntry: function(args) {
     const main = join(args.cwd, args.entry) || pkg.entry
     if (args.production) {
       return main
     } else {
-      return {
-        main:main,
-        vendor: ['webpack-hot-middleware/client']
-      }
+      return {main: main, vendor: ['webpack-hot-middleware/client']}
     }
   },
   getLoaders: function(args) {
@@ -22,7 +33,9 @@ let getCommonConfig = {
       : '[name].[ext]';
     const babelQuery = {
       presets: babelrc.presets,
-      plugins: args.env === 'production' ? babelrc.plugins : babelrc.devPlugins
+      plugins: args.env === 'production'
+        ? babelrc.plugins
+        : babelrc.devPlugins
     };
     const loaders = [
       {
@@ -131,11 +144,14 @@ let getCommonConfig = {
       ? '[name].[chunkhash:8].css'
       : '[name].css';
     let plugins = [
-      new webpack.DefinePlugin({'process.env.NODE_ENV': JSON.stringify(args.env)}),
+      new webpack.DefinePlugin({
+        'process.env.NODE_ENV': JSON.stringify(args.env)
+      }),
       new webpack.optimize.OccurrenceOrderPlugin(),
       new webpack.optimize.CommonsChunkPlugin({name: 'vendor', filename: vendorJsName, minChunks: Infinity}),
-      new HtmlWebpackPlugin({ template: args.index, inject: 'body' }),
-      new webpack.NoErrorsPlugin()
+      new HtmlWebpackPlugin({template: args.index, inject: 'body', externals: externals}),
+      new webpack.NoErrorsPlugin(),
+      new webpack.optimize.DedupePlugin()
     ];
     if (args.production) {
       plugins = [
@@ -150,7 +166,7 @@ let getCommonConfig = {
     } else {
       plugins = [
         ...plugins,
-        new webpack.HotModuleReplacementPlugin(),
+        new webpack.HotModuleReplacementPlugin()
       ];
     }
     if (args.extractCss) {
@@ -184,13 +200,17 @@ export default function getDefaultConfig(args) {
     : '[name].js';
 
   return {
-    devtool: args.production ? false : 'cheap-module-eval-source-map',
+    devtool: args.production
+      ? false
+      : 'cheap-module-eval-source-map',
     debug: Boolean(args.production),
     entry: getCommonConfig.getEntry(args),
     output: {
       path: join(args.cwd, args.output) || join(args.cwd, 'build'),
       filename: jsName,
-      publicPath: args.production ? args.publicPath : '/static/'
+      publicPath: args.production
+        ? args.publicPath
+        : '/static/'
     },
     module: {
       loaders: getCommonConfig.getLoaders(args)
@@ -204,12 +224,11 @@ export default function getDefaultConfig(args) {
       root: join(__dirname, '../node_modules')
     },
     plugins: getCommonConfig.getPluigns(args),
+    externals: testExternal,
     postcss: function() {
       return {
           default:
-          [
-            require('autoprefixer')({browsers: ['last 2 versions']})
-          ]
+          [require('autoprefixer')({browsers: ['last 2 versions']})]
         }
       }
     }
