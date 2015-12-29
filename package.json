@@ -39,6 +39,7 @@
     "is-plain-object": "^2.0.1",
     "less": "^2.5.3",
     "less-loader": "^2.2.1",
+    "portscanner": "^1.0.0",
     "postcss-loader": "^0.8.0",
     "react": "^0.14.3",
     "react-transform-catch-errors": "^1.0.0",

@@ -2,6 +2,7 @@ import express from 'express';
 import webpack from 'webpack';
 import webpackDevMiddleware from 'webpack-dev-middleware';
 import webpackHotMiddleware from 'webpack-hot-middleware';
+import { findAPortNotInUse } from 'portscanner';
 
 export default (config) => {
 
@@ -20,16 +21,16 @@ export default (config) => {
 
   app.get('*', function (req, res) {
     res.redirect('/static/');
-  })
+  });
 
-  let port = 8080;
+  findAPortNotInUse(8080, 10080, 'localhost', (error, port) => {
+    app.listen(port, 'localhost', (err, result) => {
+      if (err) {
+        console.log(err);
+        return;
+      }
 
-  app.listen(port, 'localhost', function (err, result) {
-    if (err) {
-      console.log(err);
-      return;
-    }
-
-    console.log('Listening at http://localhost: %d', port);
+      console.log('Listening at http://localhost: %d', port);
+    });
   })
 }
