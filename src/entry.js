@@ -1,5 +1,5 @@
 import { join, resolve } from 'path';
-import { readFileSync, access, F_OK, R_OK } from 'fs';
+import { readFileSync, access, accessSync, F_OK, R_OK } from 'fs';
 import rimraf from 'rimraf';
 import webpack from 'webpack';
 
@@ -31,7 +31,7 @@ export default (args, callback) => {
       break;
     case 1:
       // 报错;
-      throw new Error('You should use `tapas-build <entry> <output>`')
+      throw new Error('You should use `tapas-build <entry> <output>`');
       break;
     case 0:
       // 按照package.json 里`tapas`的配置项加载
@@ -42,7 +42,7 @@ export default (args, callback) => {
       break;
     default:
      // 报错;
-      throw new Error('You should config `tapas` in package.json')
+      throw new Error('You should config `tapas` in package.json');
   }
 
   // 验证<entry>{String} <output>{String} <vendor>{Array} <index>{String}四个参数的是否正确
@@ -50,24 +50,20 @@ export default (args, callback) => {
   // 将 args.index 转为字符串
   // 需根据<index>确定是否为组件或者网站
   // 若为组件，直接生成新的ReactDOM.render和index.html
-  if (args.index) {
+  if (!args.index) {
     args.isComponent = true;
-    args.index = rawHTML.replace(/pkgName/, pkg.name)
+    args.index = rawHTML.replace(/pkgName/, pkg.name);
   } else {
-    const indexPath = join(args.cwd, args.index)
-    access(indexPath, F_OK | R_OK, (err) => {
-      if (err) {
-        throw new Error(`The index file in ${indexPath} don\'t existed`);
-      }
-      args.index = readFileSync(indexPath, 'utf8');
-    })
+    const indexPath = join(args.cwd, args.index);
+    accessSync(indexPath, F_OK | R_OK);
+    args.index = readFileSync(indexPath, 'utf8');
   }
 
   // 统一转化成绝对路径
-  args.entry = join(args.cwd, args.entry)
-  args.output = join(args.cwd, args.output)
+  args.entry = join(args.cwd, args.entry);
+  args.output = join(args.cwd, args.output);
 
-  // <entry> file 是否存在，且是否存在 export
+  // <entry> file 是否存在
   access(args.entry, F_OK | R_OK, (err) => {
     if (err) {
       throw new Error(`The entry file in ${entryPath} don\'t existed`);
@@ -80,10 +76,6 @@ export default (args, callback) => {
   }
 
   const config = getConfig(args);
-
-  debugger
-
-  console.log(config.module.loaders[0].query)
 
   if (args.production) {
     // <output> 是否存在，如果存在则 `rm -rf`

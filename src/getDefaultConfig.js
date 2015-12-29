@@ -9,7 +9,7 @@ import getPluigns from './methods/getPlugins';
 
 export default function getDefaultConfig(args) {
 
-  return {
+  let config = {
     devtool: args.production ? false : 'cheap-module-eval-source-map',
     debug: Boolean(args.production),
     entry: getEntry(args),
@@ -19,14 +19,6 @@ export default function getDefaultConfig(args) {
       publicPath: args.production ? args.publicPath : '/static/'
     },
     module: {
-      // preLoaders: [{
-      //   test: resolve(args.entry),
-      //   loader: 'render-placement',
-      //   query: {
-      //     replace: false,
-      //     id: 'root'
-      //   }
-      // }],
       loaders: getCommonLoaders(args).concat(getCssLoaders(args))
     },
     resolve: {
@@ -40,11 +32,23 @@ export default function getDefaultConfig(args) {
     plugins: getPluigns(args),
     postcss: function() {
       return {
-          default:
-          [
-            require('autoprefixer')({browsers: ['last 2 versions']})
-          ]
-        }
+        default: [
+          require('autoprefixer')({browsers: ['last 2 versions']})
+        ]
       }
     }
   }
+
+  if (!args.production && args.isComponent) {
+    config.module.preLoaders = [{
+      test: resolve(args.entry),
+      loader: 'render-placement',
+      query: {
+        replace: false,
+        id: 'root'
+      }
+    }]
+  }
+
+  return config
+}
