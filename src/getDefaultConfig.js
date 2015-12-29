@@ -4,19 +4,28 @@ import ExtractTextPlugin from 'extract-text-webpack-plugin';
 import HtmlWebpackPlugin from 'html-webpack-plugin';
 import './monkeyPatchHtmlWebpackPlugin';
 import babelrc from './getBabelrc';
+import fs from 'fs';
+
+let cdnInfo = JSON.parse(fs.readFileSync(join(__dirname, '../cdnInfo.json'))).data;
+
 
 let externals = new Set();
-let testExternal = (context, request, callback) => {
-  if (request === 'react'){
-    externals.add('http://cdn.staticfile.org/react/0.14.3/react.min.js');
-    return callback(null, 'React', 'var');
-  }
-  if (request ==='react-dom') {
-    externals.add('http://cdn.staticfile.org/react/0.14.3/react-dom.js');
-    return callback(null, 'ReactDOM', 'var');
+
+let testExternal = ((context, request, callback) => {
+  let cdn;
+  cdnInfo.forEach(item => {
+    if(request === item.name) {
+      cdn = item
+    }
+  });
+  if(cdn) {
+    externals.add(cdn.minUrl);
+    return callback(null, cdn.global, 'var');
   }
   callback();
-};
+}).bind(this);
+
+
 
 let getCommonConfig = {
   getEntry: function(args) {

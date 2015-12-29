@@ -29,9 +29,11 @@ HtmlWebpackPlugin.prototype.injectAssetsIntoHtml = function(html, templateParams
   }
   // Add styles to the head
   head = head.concat(styles);
-  this.options.externals.forEach(external => {
-    head.push('<script src="' + external +'"></script>');
-  });
+  if (this.options.externals){
+    this.options.externals.forEach(external => {
+      head.push('<script src="' + external +'"></script>');
+    });  
+  }
   // Add scripts to body or head
   if (this.options.inject === 'head') {
     head = head.concat(scripts);

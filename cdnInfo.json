@@ -1,0 +1,53 @@
+{
+  "data": [
+    {
+      "name": "react",
+      "global": "React",
+      "url": "http://cdn.staticfile.org/react/0.14.3/react.js",
+      "minUrl": "http://cdn.staticfile.org/react/0.14.3/react.min.js",
+      "version": "0.14.3"
+    },
+    {
+      "name": "react-dom",
+      "global": "ReactDOM",
+      "url": "http://cdn.staticfile.org/react/0.14.3/react-dom.js",
+      "minUrl": "http://cdn.staticfile.org/react/0.14.3/react-dom.min.js",
+      "version": "0.14.3"
+    },
+    {
+      "name": "superagent",
+      "global": "superagent",
+      "url": "http://cdn.staticfile.org/superagent/1.2.0/superagent.js",
+      "minUrl": "http://cdn.staticfile.org/superagent/1.2.0/superagent.min.js",
+      "version": "1.2.0"
+    },
+    {
+      "name": "lodash",
+      "global": "_",
+      "url": "http://cdn.staticfile.org/lodash.js/3.10.1/lodash.js",
+      "minUrl": "http://cdn.staticfile.org/lodash.js/3.10.1/lodash.min.js",
+      "version": "3.10.1"
+    },
+    {
+      "name": "immuntable",
+      "global": "Immuntable",
+      "url": "http://cdn.staticfile.org/immutable/3.7.5/immutable.js",
+      "minUrl": "http://cdn.staticfile.org/immutable/3.7.5/immutable.min.js",
+      "version": "3.7.5"
+    },
+    {
+      "name": "react-router",
+      "global": "ReactRouter",
+      "url": "http://cdn.staticfile.org/react-router/1.0.2/ReactRouter.js",
+      "minUrl": "http://cdn.staticfile.org/react-router/1.0.2/ReactRouter.min.js",
+      "version": "1.0.2"
+    },
+    {
+      "name": "jquery",
+      "global": "$",
+      "url": "http://cdn.staticfile.org/jquery/3.0.0-alpha1/jquery.js",
+      "minUrl": "http://cdn.staticfile.org/jquery/3.0.0-alpha1/jquery.min.js",
+      "version": "3.0.0-alpha1"
+    }
+  ]
+}
