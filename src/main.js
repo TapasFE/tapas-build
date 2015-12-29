@@ -22,7 +22,7 @@ export default (args, callback) => {
   }
 
   const inputArgs = args.args;
-
+  console.log(args)
   // 先赋值到`args`上，再验证参数是否正确
   switch(inputArgs.length) {
     case 2:
@@ -30,7 +30,7 @@ export default (args, callback) => {
       args.entry = inputArgs[0];
       args.output = inputArgs[1];
       args.vendor = vendor || [];
-      args.index = index;
+      args.index = args.index || index;
       break;
     case 1:
       // 报错
@@ -41,7 +41,7 @@ export default (args, callback) => {
       args.entry = entry;
       args.output = output;
       args.vendor = vendor || [];
-      args.index = index;
+      args.index = args.index || index;
       break;
     default:
      // 报错

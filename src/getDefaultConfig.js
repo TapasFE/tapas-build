@@ -6,6 +6,7 @@ import getEntry from './methods/getEntry';
 import getCommonLoaders from './methods/getCommonLoaders';
 import getCssLoaders from './methods/getCssLoaders';
 import getPluigns from './methods/getPlugins';
+import testExternal from './methods/testExternal';
 
 export default function getDefaultConfig(args) {
 
@@ -36,7 +37,8 @@ export default function getDefaultConfig(args) {
           require('autoprefixer')({browsers: ['last 2 versions']})
         ]
       }
-    }
+    },
+    ...(args.production ? {externals: testExternal} : {externals: testExternal})
   }
 
   if (!args.production && args.isComponent) {

@@ -1,6 +1,7 @@
 import webpack from 'webpack';
 import HtmlWebpackPlugin from 'html-webpack-plugin';
 import ExtractTextPlugin from 'extract-text-webpack-plugin';
+import {externals} from './testExternal';
 
 export default ({ production, index, vendor, isComponent }) => {
   // accept a boolean depending on env is production or not
@@ -27,7 +28,7 @@ export default ({ production, index, vendor, isComponent }) => {
   if (!isComponent || !production) {
     plugins = [
       ...plugins,
-      new HtmlWebpackPlugin({ templateContent: index, minify: {collapseWhitespace: true}, inject: 'body' }),
+      new HtmlWebpackPlugin({ templateContent: index, minify: {collapseWhitespace: true}, inject: 'body', externals: externals}),
     ];
   }
   if (production) {
