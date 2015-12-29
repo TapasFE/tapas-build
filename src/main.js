@@ -5,7 +5,7 @@ import webpack from 'webpack';
 
 import getConfig from './getConfig';
 import devServer from './devServer';
-import rawHTML from './gen/rawHTML';
+import rawHTML from './constant/rawHTML';
 
 export default (args, callback) => {
   args.cwd = args.cwd || process.cwd();
