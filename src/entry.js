@@ -3,8 +3,6 @@ import { readFileSync, access, accessSync, F_OK, R_OK } from 'fs';
 import rimraf from 'rimraf';
 import webpack from 'webpack';
 
-import isObject from 'isobject';
-
 import getConfig from './getConfig';
 import devServer from './devServer';
 import rawHTML from './gen/rawHTML';
@@ -17,7 +15,12 @@ export default (args, callback) => {
 
   const pkg = require(join(args.cwd, './package.json'));
   const tapas = pkg.tapas;
-  const { entry, vendor, output, index } = tapas;
+  if (tapas) {
+    const { entry, vendor, output, index } = tapas;
+  } else {
+    var entry, vendor, output, index;
+  }
+
   const inputArgs = args.args;
 
   // 先赋值到`args`上，再验证参数是否正确
@@ -30,7 +33,7 @@ export default (args, callback) => {
       args.index = index;
       break;
     case 1:
-      // 报错;
+      // 报错
       throw new Error('You should use `tapas-build <entry> <output>`');
       break;
     case 0:
@@ -41,7 +44,7 @@ export default (args, callback) => {
       args.index = index;
       break;
     default:
-     // 报错;
+     // 报错
       throw new Error('You should config `tapas` in package.json');
   }
 
