@@ -1,4 +1,4 @@
-import { join, resolve } from 'path';
+import { join } from 'path';
 import { readFileSync, access, accessSync, F_OK, R_OK } from 'fs';
 import rimraf from 'rimraf';
 import webpack from 'webpack';
@@ -60,8 +60,17 @@ export default (args, callback) => {
   }
 
   // 统一转化成绝对路径
-  args.entry = join(args.cwd, args.entry);
-  args.output = join(args.cwd, args.output);
+  if (args.entry) {
+    args.entry = join(args.cwd, args.entry);
+  } else {
+    throw new Error('You should give a `entry` to render this project')
+  }
+
+  if (args.production && !args.output) {
+    throw new Error('You should give a `output` when env is production')
+  } else {
+    args.output = join(args.cwd, args.output);
+  }
 
   // <entry> file 是否存在
   access(args.entry, F_OK | R_OK, (err) => {
@@ -71,7 +80,7 @@ export default (args, callback) => {
   })
 
   // `vendor` 是否为数组
-  if (!Array.isArray(vendor)) {
+  if (!Array.isArray(args.vendor)) {
     throw new Error('You should config `vendor` as a array');
   }
 
