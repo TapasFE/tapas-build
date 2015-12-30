@@ -1,12 +1,11 @@
 import ExtractTextPlugin from 'extract-text-webpack-plugin';
 
-export default ({ production, cssModules }) => {
-  // accept a boolean depending on env is production or not
+export default ({ extractCss, cssModules }) => {
   // accept a boolean to decide css modules or not
   let cssLoaderLocal = 'css?modules&importLoaders=1&localIdentName=[name]__[local]___[hash:base64:5]!postcss?pack=default';
   let cssLoaderGlobal = 'css';
   let lessLoader = 'css!less';
-  if (production) {
+  if (extractCss) {
     cssLoaderLocal = ExtractTextPlugin.extract('style', cssLoaderLocal);
     cssLoaderGlobal = ExtractTextPlugin.extract('style', cssLoaderGlobal);
     lessLoader = ExtractTextPlugin.extract('style', lessLoader);

@@ -16,7 +16,7 @@ export default function getDefaultConfig(args) {
     entry: getEntry(args),
     output: {
       path: args.output || join(args.cwd, 'build'),
-      filename: args.production ? '[name].[chunkhash:8].js' : '[name].js',
+      filename: args.hash ? '[name].[chunkhash:8].js' : '[name].js',
       publicPath: args.production ? args.publicPath : '/static/'
     },
     module: {
@@ -38,10 +38,11 @@ export default function getDefaultConfig(args) {
         ]
       }
     },
-    ...(args.production ? {externals: testExternal} : {externals: testExternal})
+    ...(args.production ? {externals: testExternal} : {})
   }
 
-  if (!args.production && args.isComponent) {
+  // 组件在非生产环境下增加render方法
+  if (args.isComponent && !args.production) {
     config.module.preLoaders = [{
       test: resolve(args.entry),
       loader: 'render-placement',

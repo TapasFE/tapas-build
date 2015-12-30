@@ -1,8 +1,7 @@
 import babelrc from './getBabelrc';
 
-export default ({ production, entry }) => {
-  // accept a boolean depending on env is production or not
-  let name = production
+export default ({ production, hash, entry }) => {
+  let name = hash
     ? '[name].[hash:8].[ext]'
     : '[name].[ext]';
   const babelQuery = {

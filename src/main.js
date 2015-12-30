@@ -11,7 +11,12 @@ export default (args, callback) => {
   args.cwd = args.cwd || process.cwd();
   args.publicPath = args.publicPath || './';
   args.cssModules = args.cssModules || true;
-  args.isComponent = false;
+  // 根据<index>确定是否为组件或者网站
+  args.isComponent = args.index ? false : true;
+  // 初始化args下hash与extractCss属性
+  const checker = args.production && !args.isComponent;
+  args.hash = checker;
+  args.extractCss = checker;
 
   const pkg = require(join(args.cwd, './package.json'));
   const tapas = pkg.tapas;
@@ -22,7 +27,6 @@ export default (args, callback) => {
   }
 
   const inputArgs = args.args;
-  console.log(args)
   // 先赋值到`args`上，再验证参数是否正确
   switch(inputArgs.length) {
     case 2:
@@ -51,10 +55,8 @@ export default (args, callback) => {
   // 验证<entry>{String} <output>{String} <vendor>{Array} <index>{String}四个参数的是否正确
 
   // 将 args.index 转为字符串
-  // 需根据<index>确定是否为组件或者网站
   // 若为组件，直接生成新的ReactDOM.render和index.html
   if (!args.index) {
-    args.isComponent = true;
     args.index = rawHTML.replace(/pkgName/, pkg.name);
   } else {
     const indexPath = join(args.cwd, args.index);
