@@ -17,7 +17,7 @@ export default function getDefaultConfig(args) {
     output: {
       path: args.output || join(args.cwd, 'build'),
       filename: args.hash ? '[name].[chunkhash:8].js' : '[name].js',
-      publicPath: args.production ? args.publicPath : '/static/'
+      publicPath: args.production ? args.publicPath : '/'
     },
     module: {
       loaders: getCommonLoaders(args).concat(getCssLoaders(args))

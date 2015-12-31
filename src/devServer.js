@@ -19,10 +19,6 @@ export default (config) => {
   app.use(webpackDevMiddleware(compiler, options));
   app.use(webpackHotMiddleware(compiler));
 
-  app.get('*', function (req, res) {
-    res.redirect('/static/');
-  });
-
   findAPortNotInUse(8080, 10080, 'localhost', (error, port) => {
     app.listen(port, 'localhost', (err, result) => {
       if (err) {

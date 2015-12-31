@@ -80,7 +80,7 @@ export default (args, callback) => {
   // <entry> file 是否存在
   access(args.entry, F_OK | R_OK, (err) => {
     if (err) {
-      throw new Error(`The entry file in ${entryPath} don\'t existed`);
+      throw new Error(`The entry file in ${args.entry} don\'t existed`);
     }
   })
 
