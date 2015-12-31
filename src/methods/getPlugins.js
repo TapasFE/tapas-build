@@ -36,19 +36,21 @@ export default ({ production, index, vendor, isComponent, hash, extractCss }) =>
     // 在组件打包生产代码时，不生成html
     plugins = [
       ...plugins,
-      new HtmlWebpackPlugin({ templateContent: index, minify: {collapseWhitespace: true}, inject: 'body', externals: externals}),
+      new HtmlWebpackPlugin({ templateContent: index,  inject: 'body'}),
     ];
   }
   if (production) {
-    plugins = [
-      ...plugins,
-      new webpack.optimize.UglifyJsPlugin({
-        compress: {
-          warnings: false
-        },
-        sourceMap: false
-      })
-    ];
+    if(!isComponent) {
+      plugins = [
+        ...plugins,
+        new webpack.optimize.UglifyJsPlugin({
+          compress: {
+            warnings: false
+          },
+          sourceMap: false
+        })
+      ];
+    }
   } else {
     plugins = [
       ...plugins,
