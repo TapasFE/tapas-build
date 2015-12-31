@@ -19,12 +19,17 @@ export default (args, callback) => {
   args.extractCss = checker;
 
   const pkg = require(join(args.cwd, './package.json'));
+
+  // 检验tapas参数是否存在
   const tapas = pkg.tapas;
   if (tapas) {
-    const { entry, vendor, output, index } = tapas;
+    var { entry, vendor, output, index, babelLoaderPlugins, port } = tapas;
   } else {
-    var entry, vendor, output, index;
+    var entry, vendor, output, index, babelLoaderPlugins, port;
   }
+
+  // 查找babel-loader-plugins，其为数组时，挂到args
+  args.babelLoaderPlugins = Array.isArray(babelLoaderPlugins) ? babelLoaderPlugins : [];
 
   const inputArgs = args.args;
   // 先赋值到`args`上，再验证参数是否正确
@@ -106,7 +111,7 @@ export default (args, callback) => {
       console.log(compiler);
     });
   } else {
-    devServer(config);
+    devServer(config, port);
   }
 }
 

@@ -1,6 +1,6 @@
 import babelrc from './getBabelrc';
 
-export default ({ production, hash, entry }) => {
+export default ({ production, hash, entry, babelLoaderPlugins }) => {
   let name = hash
     ? '[name].[hash:8].[ext]'
     : '[name].[ext]';
@@ -8,6 +8,8 @@ export default ({ production, hash, entry }) => {
     presets: babelrc.presets,
     plugins: production ? babelrc.plugins : babelrc.devPlugins
   };
+  // 合并babelLoaderPlugins
+  Array.prototype.push.apply(babelQuery.plugins, babelLoaderPlugins);
   const loaders = [
     {
       test: /\.jsx?$/,
