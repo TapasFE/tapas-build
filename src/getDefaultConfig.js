@@ -40,7 +40,7 @@ export default function getDefaultConfig(args) {
         ]
       }
     },
-    ...(args.production ? {externals: testExternal} : {})
+    ...(args.production && !args.isComponent ? {externals: testExternal} : {})
   }
 
   // 组件在非生产环境下增加render方法
