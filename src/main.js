@@ -10,9 +10,10 @@ import rawHTML from './constant/rawHTML';
 export default (args, callback) => {
   args.cwd = args.cwd || process.cwd();
   args.publicPath = args.publicPath || './';
-  args.cssModules = args.cssModules || true;
   // 根据<index>确定是否为组件或者网站
   args.isComponent = args.index ? false : true;
+  // 组件不采用css modules
+  args.cssModules = !args.isComponent;
   // 初始化args下hash与extractCss属性
   const checker = args.production && !args.isComponent;
   args.hash = checker;

@@ -8,6 +8,8 @@ export default ({ production, entry, vendor}) => {
       vendor: vendor
     }
   } else {
-    return [entry]
+    return {
+      index: entry
+    }
   }
 }
