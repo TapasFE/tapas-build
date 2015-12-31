@@ -100,16 +100,18 @@ export default (args, callback) => {
   if (args.production) {
     // <output> 是否存在，如果存在则 `rm -rf`
     const outputPath = args.output;
-    access(outputPath, F_OK, (err) => {
-      if (!err) {
-        rimraf(outputPath, () => {
-          console.log('The output path is clean');
-        });
-      }
-    });
+    if(join(args.cwd, './') !== join(outputPath, './')){
+      access(outputPath, F_OK, (err) => {
+        if (!err) {
+          rimraf(outputPath, () => {
+            console.log('The output path is clean');
+          });
+        }
+      });
+    }
 
     const compiler = webpack(config, (err, stats) => {
-      console.log(compiler);
+      //console.log(compiler);
     });
   } else {
     devServer(config, port);
