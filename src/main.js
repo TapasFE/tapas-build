@@ -29,6 +29,9 @@ export default (args, callback) => {
     var entry, vendor, output, index, babelLoaderPlugins, port;
   }
 
+  vendor = vendor || [];
+  if(!args.isComponent && args.production) vendor.unshift(require.resolve('npm-cdn-amd-loader'));
+
   // 查找babel-loader-plugins，其为数组时，挂到args
   args.babelLoaderPlugins = Array.isArray(babelLoaderPlugins) ? babelLoaderPlugins : [];
 
