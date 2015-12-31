@@ -1,6 +1,6 @@
 import fs from 'fs';
 import {join} from 'path';
-import cdnInfo from 'npm-cdn-amd-loader/cdnInfo';
+import cdnInfo from 'tapas-externals/cdnInfo';
 
 export default ((context, request, callback) => {
   let cdn = cdnInfo[request];

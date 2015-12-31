@@ -48,6 +48,7 @@
     "render-placement-loader": "git+ssh:git@github.com:vagusX/render-placement-loader.git",
     "rimraf": "^2.4.4",
     "style-loader": "^0.13.0",
+    "tapas-externals": "^0.1.0",
     "url-loader": "^0.5.7",
     "webpack": "^1.12.9",
     "webpack-dev-middleware": "^1.4.0",

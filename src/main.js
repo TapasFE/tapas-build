@@ -30,7 +30,7 @@ export default (args, callback) => {
   }
 
   vendor = vendor || [];
-  if(!args.isComponent && args.production) vendor.unshift(require.resolve('npm-cdn-amd-loader'));
+  if(!args.isComponent && args.production) vendor.unshift(require.resolve('tapas-externals'));
 
   // 查找babel-loader-plugins，其为数组时，挂到args
   args.babelLoaderPlugins = Array.isArray(babelLoaderPlugins) ? babelLoaderPlugins : [];
