@@ -16,8 +16,8 @@ export default function getDefaultConfig(args) {
     entry: getEntry(args),
     output: {
       path: args.output || join(args.cwd, 'build'),
-      filename: args.production && !args.isComponent ? '[name].[chunkhash:8].js' : '[name].js',
-      publicPath: args.production ? args.publicPath : '/static/',
+      filename: (args.production && !args.isComponent) ? '[name].[chunkhash:8].js' : '[name].js',
+      publicPath: args.production ? args.publicPath : '/',
       library: '[name]',
       libraryTarget:'umd',
       umdNamedDefines: true
@@ -41,7 +41,7 @@ export default function getDefaultConfig(args) {
         ]
       }
     },
-    ...(args.production && !args.isComponent ? {externals: testExternal} : {})
+    ...((args.production && !args.isComponent) ? {externals: testExternal} : {})
   }
 
   // 组件在非生产环境下增加render方法
