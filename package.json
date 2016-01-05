@@ -45,7 +45,7 @@
     "react-transform-catch-errors": "^1.0.0",
     "react-transform-hmr": "^1.0.1",
     "redbox-react": "^1.2.0",
-    "render-placement-loader": "git+ssh:git@github.com:vagusX/render-placement-loader.git",
+    "render-placement-loader": "https://github.com/vagusX/render-placement-loader.git",
     "rimraf": "^2.4.4",
     "style-loader": "^0.13.0",
     "tapas-externals": "^0.1.0",
