@@ -1,33 +1,40 @@
-import express from 'express'
-import webpack from 'webpack'
-import webpackDevMiddleware from 'webpack-dev-middleware'
-import webpackHotMiddleware from 'webpack-hot-middleware'
+import express from 'express';
+import webpack from 'webpack';
+import webpackDevMiddleware from 'webpack-dev-middleware';
+import webpackHotMiddleware from 'webpack-hot-middleware';
+import { findAPortNotInUse } from 'portscanner';
 
-export default (config) => {
+const serverStart = (app, port) => {
+  app.listen(port, 'localhost', (err, result) => {
+    if (err) {
+      console.log(err);
+      return;
+    }
 
-  var app = express()
+    console.log('Listening at http://localhost:%d', port);
+  });
+};
 
-  var compiler = webpack(config)
+export default (config, port) => {
+
+  var app = express();
+
+  var compiler = webpack(config);
   var options = {
     noInfo: true,
     quiet: false,
     publicPath: config.output.publicPath,
     stats: { colors: true }
+  };
+
+  app.use(webpackDevMiddleware(compiler, options));
+  app.use(webpackHotMiddleware(compiler));
+
+  if (port) {
+    serverStart(app, port);
+  } else {
+    findAPortNotInUse(8080, 10080, 'localhost', (error, _port) => {
+      serverStart(app, _port);
+    });
   }
-
-  app.use(webpackDevMiddleware(compiler, options))
-  app.use(webpackHotMiddleware(compiler))
-
-  app.get('*', function (req, res) {
-    res.redirect('/static/')
-  })
-
-  app.listen(8080, 'localhost', function (err, result) {
-    if (err) {
-      console.log(err)
-      return
-    }
-
-    console.log('Listening at http://localhost: 8080')
-  })
 }

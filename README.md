@@ -24,6 +24,18 @@ $ tapas-build --index pathToYourIndex.html <entry> <output>
 -i. --index
 ```
 
+You can also add the config variables `tapas` to your projects package.json like this:
+
+```
+  "tapas": {
+    "entry": "./client/app.js",
+    "output": "./build",
+    "index": "./template.html",
+    "vendor": ["react", "react-dom"],
+    "babelLoaderPlugins": ["./scripts/babelRelayPlugin"],
+    "port": "12306"
+  }
+```
 
 ### License
 
