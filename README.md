@@ -37,6 +37,12 @@ You can also add the config variables `tapas` to your projects package.json like
   }
 ```
 
+### develop
+shell
+```
+  NODE_ENV=dev tapas-build
+```
+
 ### License
 
 Copyright (c) 2015 Tapas Tech

@@ -2,7 +2,6 @@
 require('babel-core-resolve-enhance')({
   dirname: __dirname
 });
-require('babel-core/register');
 
 var program = require('commander');
 
@@ -13,4 +12,9 @@ program
   .option('-i, --index <index.html>', 'Specifies a index.html to inject css and js.')
   .parse(process.argv);
 
-require('../src/main')(program);
+if (process.env.NODE_ENV === 'dev') {
+  require('babel-core/register');
+  require('../src/main')(program);
+} else {
+  require('../build/main')(program);
+}
