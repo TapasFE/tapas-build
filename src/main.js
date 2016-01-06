@@ -10,14 +10,6 @@ import rawHTML from './constant/rawHTML';
 export default (args, callback) => {
   args.cwd = args.cwd || process.cwd();
   args.publicPath = args.publicPath || './';
-  // 根据<index>确定是否为组件或者网站
-  args.isComponent = args.index ? false : true;
-  // 组件不采用css modules
-  args.cssModules = !args.isComponent;
-  // 初始化args下hash与extractCss属性
-  const checker = args.production && !args.isComponent;
-  args.hash = checker;
-  args.extractCss = checker;
 
   const pkg = require(join(args.cwd, './package.json'));
 
@@ -97,6 +89,15 @@ export default (args, callback) => {
   if (!Array.isArray(args.vendor)) {
     throw new Error('You should config `vendor` as a array');
   }
+
+  // 根据<index>确定是否为组件或者网站
+  args.isComponent = args.index ? false : true;
+  // 组件不采用css modules
+  args.cssModules = !args.isComponent;
+  // 初始化args下hash与extractCss属性
+  const checker = args.production && !args.isComponent;
+  args.hash = checker;
+  args.extractCss = checker;
 
   const config = getConfig(args);
 
