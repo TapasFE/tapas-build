@@ -161,7 +161,7 @@ module.exports = function(compiler, options) {
 			try{
 				stat = fs.statSync(filename)
 			} catch(e) {
-				if(req.url !== '/__webpack_hmr') filename = getFilenameFromUrl(trimUrl(req.url));
+				if(req.url !== '/__webpack_hmr' && req.url !== '/') filename = getFilenameFromUrl('/');
 			}
 			try {
 				var stat = fs.statSync(filename);
