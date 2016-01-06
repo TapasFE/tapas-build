@@ -1,6 +1,6 @@
 {
   "name": "tapas-build",
-  "version": "0.2.5",
+  "version": "0.2.6",
   "description": "A command line tools for building React project",
   "repository": {
     "type": "git",

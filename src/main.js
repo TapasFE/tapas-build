@@ -53,6 +53,16 @@ export default (args, callback) => {
       throw new Error('You should config `tapas` in package.json');
   }
 
+  // 初始化部分属性(isComponent)
+  // 根据<index>确定是否为组件或者网站
+  args.isComponent = args.index ? false : true;
+  // 组件不采用css modules
+  args.cssModules = !args.isComponent;
+  // 初始化args下hash与extractCss属性
+  const checker = args.production && !args.isComponent;
+  args.hash = checker;
+  args.extractCss = checker;
+
   // 验证<entry>{String} <output>{String} <vendor>{Array} <index>{String}四个参数的是否正确
 
   // 将 args.index 转为字符串
@@ -89,15 +99,6 @@ export default (args, callback) => {
   if (!Array.isArray(args.vendor)) {
     throw new Error('You should config `vendor` as a array');
   }
-
-  // 根据<index>确定是否为组件或者网站
-  args.isComponent = args.index ? false : true;
-  // 组件不采用css modules
-  args.cssModules = !args.isComponent;
-  // 初始化args下hash与extractCss属性
-  const checker = args.production && !args.isComponent;
-  args.hash = checker;
-  args.extractCss = checker;
 
   const config = getConfig(args);
 
