@@ -140,10 +140,6 @@ module.exports = function(compiler, options) {
 		return filename ? pathJoin(compiler.outputPath, filename) : compiler.outputPath;
 	}
 
-	function trimUrl(url) {
-		if(url.split('/').length > 2) return '/' + url.split('/')[-1];
-		else return '/';
-	}
 
 	// The middleware function
 	function webpackDevMiddleware(req, res, next) {

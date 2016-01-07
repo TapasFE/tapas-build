@@ -10,6 +10,7 @@ program
   .usage('[options] <entry> <output>')
   .option('-p, --production', 'Generate files which are under production environment.')
   .option('-i, --index <index.html>', 'Specifies a index.html to inject css and js.')
+  .option('--publicPath', 'Specifies the publicPath used to insert before all your url to assets.')
   .parse(process.argv);
 
 if (process.env.NODE_ENV === 'dev') {

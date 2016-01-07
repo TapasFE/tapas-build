@@ -9,7 +9,7 @@ import rawHTML from './constant/rawHTML';
 
 export default (args, callback) => {
   args.cwd = args.cwd || process.cwd();
-  args.publicPath = args.publicPath || './';
+
 
   const pkg = require(join(args.cwd, './package.json'));
 
@@ -21,37 +21,18 @@ export default (args, callback) => {
     var entry, vendor, output, index, babelLoaderPlugins, port;
   }
 
-  vendor = vendor || [];
-  if(!args.isComponent && args.production) vendor.unshift(require.resolve('tapas-externals'));
+  //用命令行参数覆盖package.json里的参数
+  if(args.args.length === 1) throw new Error('You should use `tapas-build <entry> <output>`');
+  args.entry = args.args[0] || entry;
+  args.output = args.args[1] || output;
+  args.index = args.index || index;
+  args.vendor = vendor || [];
 
+  args.publicPath = args.publicPath || './';
   // 查找babel-loader-plugins，其为数组时，挂到args
   args.babelLoaderPlugins = Array.isArray(babelLoaderPlugins) ? babelLoaderPlugins : [];
 
-  const inputArgs = args.args;
-  // 先赋值到`args`上，再验证参数是否正确
-  switch(inputArgs.length) {
-    case 2:
-      // 按照package.json 里`tapas`(忽略其中的entry和vendor选项)的配置项加载
-      args.entry = inputArgs[0];
-      args.output = inputArgs[1];
-      args.vendor = vendor || [];
-      args.index = args.index || index;
-      break;
-    case 1:
-      // 报错
-      throw new Error('You should use `tapas-build <entry> <output>`');
-      break;
-    case 0:
-      // 按照package.json 里`tapas`的配置项加载
-      args.entry = entry;
-      args.output = output;
-      args.vendor = vendor || [];
-      args.index = args.index || index;
-      break;
-    default:
-     // 报错
-      throw new Error('You should config `tapas` in package.json');
-  }
+  // -----------开始根据输入参数确定内部变量---------------------
 
   // 初始化部分属性(isComponent)
   // 根据<index>确定是否为组件或者网站
@@ -63,7 +44,12 @@ export default (args, callback) => {
   args.hash = checker;
   args.extractCss = checker;
 
+  // 如果生产环境且不是组件开发，使用tapas-externals
+  if(!args.isComponent && args.production) args.vendor.unshift(require.resolve('tapas-externals'));
+
   // 验证<entry>{String} <output>{String} <vendor>{Array} <index>{String}四个参数的是否正确
+  if(typeof args.entry !== 'string') throw new Error('Entry must be a string');
+  if(typeof args.output !== 'string') throw new Error('Output must be a string');
 
   // 将 args.index 转为字符串
   // 若为组件，直接生成新的ReactDOM.render和index.html
@@ -105,6 +91,7 @@ export default (args, callback) => {
   if (args.production) {
     // <output> 是否存在，如果存在则 `rm -rf`
     const outputPath = args.output;
+    //如果在根目录下，不删除
     if(join(args.cwd, './') !== join(outputPath, './')){
       access(outputPath, F_OK, (err) => {
         if (!err) {
