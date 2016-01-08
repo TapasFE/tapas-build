@@ -11,7 +11,7 @@ import testExternal from './methods/testExternal';
 export default function getDefaultConfig(args) {
 
   let config = {
-    devtool: args.production ? false : 'cheap-module-eval-source-map',
+    devtool: args.production ? false : 'source-map',
     debug: Boolean(args.production),
     entry: getEntry(args),
     output: {
