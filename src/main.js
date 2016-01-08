@@ -16,9 +16,9 @@ export default (args, callback) => {
   // 检验tapas参数是否存在
   const tapas = pkg.tapas;
   if (tapas) {
-    var { entry, vendor, output, index, babelLoaderPlugins, port, cssModules } = tapas;
+    var { entry, vendor, output, index, babelLoaderPlugins, port, cssModules, autoExternals } = tapas;
   } else {
-    var entry, vendor, output, index, babelLoaderPlugins, port, cssModules;
+    var entry, vendor, output, index, babelLoaderPlugins, port, cssModules, autoExternals;
   }
 
   //用命令行参数覆盖package.json里的参数
@@ -32,6 +32,9 @@ export default (args, callback) => {
   args.publicPath = args.publicPath || './';
   // 查找babel-loader-plugins，其为数组时，挂到args
   args.babelLoaderPlugins = Array.isArray(babelLoaderPlugins) ? babelLoaderPlugins : [];
+
+  // 默认关闭autoExternals
+  args.autoExternals = autoExternals || false;
 
   // -----------开始根据输入参数确定内部变量---------------------
 
