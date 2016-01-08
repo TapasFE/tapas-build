@@ -33,7 +33,8 @@ You can also add the config variables `tapas` to your projects package.json like
     "index": "./template.html",
     "vendor": ["react", "react-dom"],
     "babelLoaderPlugins": ["./scripts/babelRelayPlugin"],
-    "port": "12306"
+    "port": "12306",
+    "cssModules": true
   }
 ```
 

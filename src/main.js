@@ -16,9 +16,9 @@ export default (args, callback) => {
   // 检验tapas参数是否存在
   const tapas = pkg.tapas;
   if (tapas) {
-    var { entry, vendor, output, index, babelLoaderPlugins, port } = tapas;
+    var { entry, vendor, output, index, babelLoaderPlugins, port, cssModules } = tapas;
   } else {
-    var entry, vendor, output, index, babelLoaderPlugins, port;
+    var entry, vendor, output, index, babelLoaderPlugins, port, cssModules;
   }
 
   //用命令行参数覆盖package.json里的参数
@@ -27,6 +27,7 @@ export default (args, callback) => {
   args.output = args.args[1] || output;
   args.index = args.index || index;
   args.vendor = vendor || [];
+  args.cssModules = cssModules || false;
 
   args.publicPath = args.publicPath || './';
   // 查找babel-loader-plugins，其为数组时，挂到args
@@ -37,8 +38,6 @@ export default (args, callback) => {
   // 初始化部分属性(isComponent)
   // 根据<index>确定是否为组件或者网站
   args.isComponent = args.index ? false : true;
-  // 组件不采用css modules
-  args.cssModules = !args.isComponent;
   // 初始化args下hash与extractCss属性
   const checker = args.production && !args.isComponent;
   args.hash = checker;

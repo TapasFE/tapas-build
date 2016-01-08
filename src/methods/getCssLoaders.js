@@ -3,16 +3,19 @@ import ExtractTextPlugin from 'extract-text-webpack-plugin';
 export default ({ extractCss, cssModules }) => {
   // accept a boolean to decide css modules or not
   let cssLoaderLocal = 'css?modules&importLoaders=1&localIdentName=[name]__[local]___[hash:base64:5]!postcss?pack=default';
-  let cssLoaderGlobal = 'css';
-  let lessLoader = 'css!less';
+  let cssLoaderGlobal = 'css!postcss?pack=default';
+  let lessLoaderLocal = 'css?modules&importLoaders=1&localIdentName=[name]__[local]___[hash:base64:5]!postcss?pack=default!less';
+  let lessLoaderGlobal = 'css!postcss?pack=default!less';
   if (extractCss) {
     cssLoaderLocal = ExtractTextPlugin.extract('style', cssLoaderLocal);
     cssLoaderGlobal = ExtractTextPlugin.extract('style', cssLoaderGlobal);
-    lessLoader = ExtractTextPlugin.extract('style', lessLoader);
+    lessLoaderLocal = ExtractTextPlugin.extract('style', lessLoaderLocal);
+    lessLoaderGlobal = ExtractTextPlugin.extract('style', lessLoaderGlobal);
   } else {
     cssLoaderLocal = 'style!' + cssLoaderLocal;
     cssLoaderGlobal = 'style!' + cssLoaderGlobal;
-    lessLoader = 'style!' + lessLoader;
+    lessLoaderLocal = 'style!' + lessLoaderLocal;
+    lessLoaderGlobal = 'style!' + lessLoaderGlobal;
   }
   if (cssModules) {
     return [
@@ -26,7 +29,12 @@ export default ({ extractCss, cssModules }) => {
         include: /node_modules/
       }, {
         test: /\.less$/,
-        loader: lessLoader
+        loader: lessLoaderLocal,
+        exclude: /node_modules/
+      }, {
+        test: /\.less$/,
+        loader: lessLoaderGlobal,
+        include: /node_modules/
       }
     ];
   } else {
@@ -36,7 +44,7 @@ export default ({ extractCss, cssModules }) => {
         loader: cssLoaderGlobal
       }, {
         test: /\.less$/,
-        loader: lessLoader
+        loader: lessLoaderGlobal
       }
     ]
   }
