@@ -29,6 +29,7 @@ export default function getDefaultConfig(args) {
       fallback: join(__dirname, '../node_modules'),
       extensions: ['', '.js', '.jsx'],
       root: args.resolveRoot,
+      unsafeCache: true
     },
     resolveLoader: {
       //must set to resolve the loader from tapas-build, not process.cwd
