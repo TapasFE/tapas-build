@@ -1,4 +1,4 @@
-import { join } from 'path';
+import { join, dirname } from 'path';
 import { readFileSync, access, accessSync, F_OK, R_OK } from 'fs';
 import rimraf from 'rimraf';
 import webpack from 'webpack';
@@ -16,9 +16,9 @@ export default (args, callback) => {
   // 检验tapas参数是否存在
   const tapas = pkg.tapas;
   if (tapas) {
-    var { entry, vendor, output, index, babelLoaderPlugins, port, cssModules, autoExternals } = tapas;
+    var { entry, vendor, output, index, babelLoaderPlugins, port, cssModules, autoExternals, resolveRoot } = tapas;
   } else {
-    var entry, vendor, output, index, babelLoaderPlugins, port, cssModules, autoExternals;
+    var entry, vendor, output, index, babelLoaderPlugins, port, cssModules, autoExternals, resolveRoot;
   }
 
   //用命令行参数覆盖package.json里的参数
@@ -69,6 +69,9 @@ export default (args, callback) => {
   } else {
     throw new Error('You should give a `entry` to render this project')
   }
+
+  // require默认从resolveRoot处解析，如果没有提供，resolveRoot为entry所在文件夹
+  args.resolveRoot = resolveRoot || dirname(args.entry);
 
   if (args.production && !args.output) {
     throw new Error('You should give a `output` when env is production')
