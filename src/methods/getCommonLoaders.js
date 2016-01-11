@@ -1,6 +1,6 @@
 import babelrc from './getBabelrc';
 
-export default ({ production, hash, entry, babelLoaderPlugins }) => {
+export default ({ production, hash, entry, babelLoaderPlugins, cwd }) => {
   let name = hash
     ? '[name].[hash:8].[ext]'
     : '[name].[ext]';
@@ -15,7 +15,10 @@ export default ({ production, hash, entry, babelLoaderPlugins }) => {
       test: /\.jsx?$/,
       loader: 'babel',
       query: babelQuery,
-      exclude: /node_modules/
+      include: absPath => {
+        if(/node_modules/i.test(absPath)) return false;
+        else return RegExp(cwd, 'i').test(absPath);
+      }
     }, {
       test: /\.json$/,
       loader: 'json'
