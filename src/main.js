@@ -71,7 +71,7 @@ export default (args, callback) => {
   }
 
   // require默认从resolveRoot处解析，如果没有提供，resolveRoot为entry所在文件夹
-  args.resolveRoot = resolveRoot || dirname(args.entry);
+  args.resolveRoot = resolveRoot ? join(args.cwd, resolveRoot) : dirname(args.entry);
 
   // 默认的根目录alias为#
   args.rootAlias = rootAlias || '#';
