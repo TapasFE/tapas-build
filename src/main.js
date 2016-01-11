@@ -16,9 +16,9 @@ export default (args, callback) => {
   // 检验tapas参数是否存在
   const tapas = pkg.tapas;
   if (tapas) {
-    var { entry, vendor, output, index, babelLoaderPlugins, port, cssModules, autoExternals, resolveRoot } = tapas;
+    var { entry, vendor, output, index, babelLoaderPlugins, port, cssModules, autoExternals, resolveRoot, rootAlias } = tapas;
   } else {
-    var entry, vendor, output, index, babelLoaderPlugins, port, cssModules, autoExternals, resolveRoot;
+    var entry, vendor, output, index, babelLoaderPlugins, port, cssModules, autoExternals, resolveRoot, rootAlias;
   }
 
   //用命令行参数覆盖package.json里的参数
@@ -72,6 +72,9 @@ export default (args, callback) => {
 
   // require默认从resolveRoot处解析，如果没有提供，resolveRoot为entry所在文件夹
   args.resolveRoot = resolveRoot || dirname(args.entry);
+
+  // 默认的根目录alias为#
+  args.rootAlias = rootAlias || '#';
 
   if (args.production && !args.output) {
     throw new Error('You should give a `output` when env is production')

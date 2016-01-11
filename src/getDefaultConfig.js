@@ -28,7 +28,9 @@ export default function getDefaultConfig(args) {
     resolve: {
       fallback: join(__dirname, '../node_modules'),
       extensions: ['', '.js', '.jsx'],
-      root: args.resolveRoot,
+      alias: {
+        [args.rootAlias]: args.resolveRoot
+      },
       unsafeCache: true
     },
     resolveLoader: {
