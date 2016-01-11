@@ -34,7 +34,10 @@ You can also add the config variables `tapas` to your projects package.json like
     "vendor": ["react", "react-dom"],
     "babelLoaderPlugins": ["./scripts/babelRelayPlugin"],
     "port": "12306",
-    "cssModules": true
+    "cssModules": true,
+    "aliasRoot" : '#',
+    "resolveRoot": '/absolute/path/to/your/src/directory',
+    "autoExternals": 'true'
   }
 ```
 
