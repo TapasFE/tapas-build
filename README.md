@@ -35,9 +35,9 @@ You can also add the config variables `tapas` to your projects package.json like
     "babelLoaderPlugins": ["./scripts/babelRelayPlugin"],
     "port": "12306",
     "cssModules": true,
-    "aliasRoot" : '#',
-    "resolveRoot": '/absolute/path/to/your/src/directory',
-    "autoExternals": 'true'
+    "aliasRoot" : "#",
+    "resolveRoot": "/absolute/path/to/your/src/directory",
+    "autoExternals": true
   }
 ```
 
