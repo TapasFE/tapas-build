@@ -37,9 +37,15 @@ You can also add the config variables `tapas` to your projects package.json like
     "cssModules": true,
     "aliasRoot" : "#",
     "resolveRoot": "/absolute/path/to/your/src/directory",
-    "autoExternals": true
+    "autoExternals": true,
+    "proxy": {
+      "/api": "http://example.com:23000/no-slash-at-the-end",
+      "/backend": "http://example.com"
+    }
   }
 ```
+
+The keys of tapas['proxy'] follows the pattern of parameter 'path' used in app.use([path], middleware). Check the details [here](http://expressjs.com/en/api.html#app.use).
 
 ### develop
 shell
