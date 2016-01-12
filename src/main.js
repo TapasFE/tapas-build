@@ -16,9 +16,9 @@ export default (args, callback) => {
   // 检验tapas参数是否存在
   const tapas = pkg.tapas;
   if (tapas) {
-    var { entry, vendor, output, index, babelLoaderPlugins, port, cssModules, autoExternals, resolveRoot, rootAlias } = tapas;
+    var { entry, vendor, output, index, babelLoaderPlugins, port, cssModules, autoExternals, resolveRoot, rootAlias, proxy } = tapas;
   } else {
-    var entry, vendor, output, index, babelLoaderPlugins, port, cssModules, autoExternals, resolveRoot, rootAlias;
+    var entry, vendor, output, index, babelLoaderPlugins, port, cssModules, autoExternals, resolveRoot, rootAlias, proxy;
   }
 
   //用命令行参数覆盖package.json里的参数
@@ -45,6 +45,8 @@ export default (args, callback) => {
   const checker = args.production && !args.isComponent;
   args.hash = checker;
   args.extractCss = checker;
+
+  args.proxy = proxy;
 
   // 如果生产环境且不是组件开发，使用tapas-externals
   if(!args.isComponent && args.production) args.vendor.unshift(require.resolve('tapas-externals'));
@@ -114,7 +116,7 @@ export default (args, callback) => {
       //console.log(compiler);
     });
   } else {
-    devServer(config, port);
+    devServer(config, port, args);
   }
 }
 
