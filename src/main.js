@@ -48,9 +48,6 @@ export default (args, callback) => {
 
   args.proxy = proxy;
 
-  // 如果生产环境且不是组件开发，使用tapas-externals
-  if(!args.isComponent && args.production) args.vendor.unshift(require.resolve('tapas-externals'));
-
   // 验证<entry>{String} <output>{String} <vendor>{Array} <index>{String}四个参数的是否正确
   if(typeof args.entry !== 'string') throw new Error('Entry must be a string');
   if(typeof args.output !== 'string') throw new Error('Output must be a string');
