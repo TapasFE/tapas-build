@@ -1,3 +1,13 @@
+import resolve from 'resolve';
+
+let reactPath;
+
+try {
+  reactPath = resolve.sync('react', { basedir: process.cwd() });
+} catch (e) {
+  reactPath = require.resolve('react');
+}
+
 export default {
   "presets": [
     "react",
@@ -9,15 +19,15 @@ export default {
     ["react-transform", {
       "transforms": [{
         "transform": "react-transform-hmr",
-        "imports": ["react"],
+        "imports": [reactPath],
         "locals": ["module"]
       }, {
         "transform": "react-transform-catch-errors",
-        "imports": ["react", "redbox-react"]
+        "imports": [reactPath, "redbox-noreact"]
       }]
     }]
   ],
   plugins: [
     ["antd"]
   ]
-}
+};
