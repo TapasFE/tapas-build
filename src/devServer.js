@@ -1,8 +1,9 @@
 import express from 'express';
 import webpack from 'webpack';
-import webpackDevMiddleware from './dev-middleware';
+import webpackDevMiddleware from 'webpack-dev-middleware';
 import webpackHotMiddleware from 'webpack-hot-middleware';
 import { findAPortNotInUse } from 'portscanner';
+import historyFallback from 'connect-history-api-fallback';
 import proxy from 'express-http-proxy';
 import url from 'url';
 
@@ -36,15 +37,19 @@ export default (config, port, args) => {
           const pathname = (url.parse(args.proxy[key]).pathname ==='/' ? '' : url.parse(args.proxy[key]).pathname) + req.url;
           console.log(`Request: ${req.url}`);
           console.log(
-`Target: {
-  Host: ${url.parse(args.proxy[key]).host},
-  Pathname: ${pathname}
-}`);
+            `Target: {
+              Host: ${url.parse(args.proxy[key]).host},
+              Pathname: ${pathname}
+            }`
+          );
           return pathname;
         }
       }));
     });
   }
+
+  app.use(historyFallback());
+
   app.use(webpackDevMiddleware(compiler, options));
   app.use(webpackHotMiddleware(compiler));
 
