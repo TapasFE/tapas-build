@@ -1,10 +1,9 @@
 {
   "name": "tapas-build",
-  "version": "0.2.17",
   "description": "A command line tools for building React project",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/TapasFE/tapas-build.git"
+    "url": "https://github.com/TapasFE/tapas-build.git"
   },
   "license": "MIT",
   "bugs": {
@@ -17,9 +16,30 @@
   "scripts": {
     "build": "babel src -d build",
     "publish": "git push origin master --tags",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\"",
+    "semantic-release": "semantic-release pre && npm publish && semantic-release post"
   },
   "pre-commit": [],
+  "config": {
+    "ghooks": {
+      "commit-msg": "node ./node_modules/.bin/validate-commit-msg"
+    },
+    "validate-commit-msg": {
+      "types": [
+        "feat",
+        "fix",
+        "docs",
+        "style",
+        "refactor",
+        "perf",
+        "test",
+        "chore",
+        "revert"
+      ],
+      "warnOnFail": false,
+      "maxSubjectLength": 100
+    }
+  },
   "dependencies": {
     "autoprefixer": "^6.2.1",
     "babel-cli": "^6.3.17",
@@ -56,5 +76,10 @@
     "webpack": "^1.12.9",
     "webpack-dev-middleware": "^1.5.1",
     "webpack-hot-middleware": "^2.6.0"
+  },
+  "devDependencies": {
+    "ghooks": "^1.0.3",
+    "semantic-release": "^4.3.5",
+    "validate-commit-msg": "^2.0.0"
   }
 }
