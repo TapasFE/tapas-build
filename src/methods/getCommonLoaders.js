@@ -6,7 +6,8 @@ export default ({ production, hash, entry, babelLoaderPlugins, resolveRoot }) =>
     : '[name].[ext]';
   const babelQuery = {
     presets: babelrc.presets,
-    plugins: production ? babelrc.plugins : babelrc.devPlugins
+    plugins: production ? babelrc.plugins : babelrc.devPlugins,
+    cacheDirectory: true
   };
   // 合并babelLoaderPlugins
   Array.prototype.push.apply(babelQuery.plugins, babelLoaderPlugins);
