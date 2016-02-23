@@ -3,7 +3,7 @@
   "description": "A command line tools for building React project",
   "repository": {
     "type": "git",
-    "url": "git@github.com:TapasFE/tapas-build.git"
+    "url": "https://github.com/TapasFE/tapas-build.git"
   },
   "license": "MIT",
   "bugs": {
