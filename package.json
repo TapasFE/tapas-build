@@ -1,6 +1,7 @@
 {
   "name": "tapas-build",
   "description": "A command line tools for building React project",
+  "version": "0.4.0",
   "repository": {
     "type": "git",
     "url": "https://github.com/TapasFE/tapas-build.git"
@@ -10,6 +11,7 @@
     "url": "https://github.com/tsingchao/tapas-build/issues"
   },
   "homepage": "https://github.com/tsingchao/tapas-build#readme",
+  "preferGlobal": true,
   "bin": {
     "tapas-build": "bin/tapas-build"
   },

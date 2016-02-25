@@ -13,9 +13,13 @@ program
   .option('--publicPath', 'Specifies the publicPath used to insert before all your url to assets.')
   .parse(process.argv);
 
-if (process.env.NODE_ENV === 'dev') {
-  require('babel-core/register');
-  require('../src/main')(program);
-} else {
+try {
   require('../build/main')(program);
+} catch(err) {
+  if (err.code === 'MODULE_NOT_FOUND') {
+    require('babel-core/register');
+    require('../src/main')(program);
+  } else {
+    console.log(err)
+  }
 }
