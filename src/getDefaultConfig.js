@@ -7,6 +7,19 @@ import getCommonLoaders from './methods/getCommonLoaders';
 import getCssLoaders from './methods/getCssLoaders';
 import getPluigns from './methods/getPlugins';
 import testExternal from './methods/testExternal';
+import resolveId from "postcss-import/lib/resolve-id";
+
+const AUTOPREFIXER_BROWSERS = [
+  'Android 2.3',
+  'Android >= 4',
+  'Chrome >= 35',
+  'Firefox >= 31',
+  'Explorer >= 9',
+  'iOS >= 7',
+  'Opera >= 12',
+  'Safari >= 7.1',
+];
+
 
 export default function getDefaultConfig(args) {
 
@@ -38,10 +51,28 @@ export default function getDefaultConfig(args) {
       root: join(__dirname, '../node_modules')
     },
     plugins: getPluigns(args),
-    postcss: function() {
+    postcss: function(bundler) {
       return {
         default: [
-          require('autoprefixer')({browsers: ['last 2 versions']})
+          require('postcss-import')({
+  					addDependencyTo: bundler,
+  					resolve: (id, basedir, importOptions) => {
+  						if(id.startsWith('#')) return path.join(args.resolveRoot, id.substr(1));
+  						else return resolveId(id, basedir, importOptions);
+  					}
+  				}),
+          require('postcss-cssnext')({browsers: AUTOPREFIXER_BROWSERS})
+        ],
+        sass: [
+          require('postcss-import')({
+            addDependencyTo: bundler,
+            resolve: (id, basedir, importOptions) => {
+              if(id.startsWith('#')) return path.join(args.resolveRoot, id.substr(1));
+              else return resolveId(id, basedir, importOptions);
+            }
+          }),
+          require('precss'),
+          require('postcss-cssnext')({browsers: AUTOPREFIXER_BROWSERS})
         ]
       }
     },
