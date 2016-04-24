@@ -57,7 +57,7 @@ export default function getDefaultConfig(args) {
           require('postcss-import')({
   					addDependencyTo: bundler,
   					resolve: (id, basedir, importOptions) => {
-  						if(id.startsWith('#')) return path.join(args.resolveRoot, id.substr(1));
+  						if(id.startsWith(args.rootAlias)) return path.join(args.resolveRoot, id.substr(args.rootAlias.length));
   						else return resolveId(id, basedir, importOptions);
   					}
   				}),
@@ -67,7 +67,7 @@ export default function getDefaultConfig(args) {
           require('postcss-import')({
             addDependencyTo: bundler,
             resolve: (id, basedir, importOptions) => {
-              if(id.startsWith('#')) return path.join(args.resolveRoot, id.substr(1));
+              if(id.startsWith(args.rootAlias)) return path.join(args.resolveRoot, id.substr(args.rootAlias.length));
               else return resolveId(id, basedir, importOptions);
             }
           }),
